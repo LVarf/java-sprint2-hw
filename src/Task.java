@@ -5,8 +5,10 @@ import java.util.Scanner;
 public class Task {
     protected String name;
     protected String description; //описание задачи
+    protected Integer status;
 
     public Task() {
+        this.status = 0;
     }
 
     public void add(){

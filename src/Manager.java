@@ -1,3 +1,4 @@
+import java.lang.module.FindException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -40,6 +41,14 @@ public class Manager {
                     System.out.println("Введите номер задачи");
                     getTasks(scanner.nextInt());
                     break;
+                case 5:
+                    System.out.println("Введите номер задачи, которую нужно обновить");
+                    updateTasks(scanner.nextInt());
+                    break;
+                case 6:
+                    System.out.println("Введите номер задачи, которую нужно удалить");
+                    removeTask(scanner.nextInt());
+                    break;
                 case 0:
                     System.out.println("Программа успешно завершила работу");
                     System.exit(0);
@@ -47,6 +56,86 @@ public class Manager {
                 System.out.println("Такой команды пока нет");
             }
         }
+    }
+
+    public String statusSubTask(SubTask o){
+        String result = "";
+        if (o.status == 0){
+            result = "новая";
+        } else if (o.status == 1) {
+            result = "в процессе выполнения";
+        } else result = "выполнена";
+        return result;
+    }
+
+    public void updateEpic(HashMap map, int j, int i, Epic o, int index){//Метод обновляет и перезаписывает епик
+        if ((i > 0) && (i < j * 2)) {
+            IN_PROGRESS.put(index, o);
+            map.remove(index);
+            System.out.println("Задача " + index + " теперь в процессе выполнения");
+        } else if (i == j * 2) {
+            DONE.put(index, o);
+            map.remove(index);
+            System.out.println("Задача " + index + " выполнена");
+        }
+    }//Метод обновляет и перезаписывает епик
+
+    public void updateTasks(int index){
+        Scanner scanner = new Scanner(System.in);
+
+        if (!(NEW.isEmpty()) && NEW.containsKey(index)) {
+            if (NEW.get(index).list == null) {
+                IN_PROGRESS.put(index, NEW.get(index));
+                NEW.remove(index);
+            } else {
+                getTasks(index);
+                System.out.println("Введите номер подзадачи");
+                int indexST = scanner.nextInt();
+                Epic o = (Epic) NEW.get(index);//Объект для работы с эпиком
+                int j = o.list.size();//переменная для подсчёт
+                if ((indexST > 0) && (indexST < j+1)) {
+                    SubTask sT = (SubTask) o.list.get(indexST - 1);//Объект для работы с подзадачей
+                    if (sT.status < 2) {
+                        sT.status++;
+                    } else System.out.println("Выбранная подзадача уже выполнена");
+
+                    int i = 0;
+                    for (SubTask st : o.list) {
+                        i += st.status;
+                    }
+                    if ((i == 1) || (i == 2 * j)) {
+                        updateEpic(NEW, j, i, o, index);
+                    }
+                } else System.out.println("Такой подзадачи в списке нет");
+            }
+        } else if(!(IN_PROGRESS.isEmpty()) && IN_PROGRESS.containsKey(index)){
+            if (IN_PROGRESS.get(index).list == null){
+                DONE.put(index, IN_PROGRESS.get(index));
+                IN_PROGRESS.remove(index);
+            } else {
+                getTasks(index);
+                System.out.println("Введите номер подзадачи");
+                Epic o = (Epic) IN_PROGRESS.get(index);//Объект для работы с эпиком
+                int indexST = scanner.nextInt();
+                int j = o.list.size();//переменная для подсчёт
+                if ((indexST > 0) && (indexST < j+1)) {
+                    SubTask sT = (SubTask) o.list.get(indexST - 1);//Объект для работы с подзадачей
+                    if (sT.status < 2) {
+                        sT.status++;
+                    } else System.out.println("Выбранная подзадача уже выполнена");
+
+                    int i = 0;
+                    for (SubTask st : o.list) {
+                        i += st.status;
+                    }
+                    if ((i == 1) || (i == 2 * j)) {
+                        updateEpic(IN_PROGRESS, j, i, o, index);
+                    }
+                } else System.out.println("Такой подзадачи в списке нет");
+            }
+        } else if(!(DONE.isEmpty()) && DONE.containsKey(index)) {
+            System.out.println("Задача уже выполнена");
+        } else System.out.println("Задачи под таким номером нет");
     }
 
     public void getTasks(int index){//Метод возвращает задачу по идентификатору
@@ -58,7 +147,7 @@ public class Manager {
                 Epic o = (Epic) NEW.get(index);
                 int j = 1;
                 for(SubTask st: o.list){
-                    System.out.println("\tПодзадача " + j + ": " + st.getName());
+                    System.out.println("\tПодзадача " + j + ": " + st.getName() + " " + statusSubTask(st));
                     System.out.println("\tОписание: " + st.getName());
                     j++;
                 }
@@ -71,7 +160,7 @@ public class Manager {
                 Epic o = (Epic) IN_PROGRESS.get(index);
                 int j = 1;
                 for (SubTask st : o.list) {
-                    System.out.println("\tПодзадача " + j + ": " + st.getName());
+                    System.out.println("\tПодзадача " + j + ": " + st.getName() + " " + statusSubTask(st));
                     System.out.println("\tОписание: " + st.getName());
                     j++;
                 }
@@ -84,7 +173,7 @@ public class Manager {
                 Epic o = (Epic) DONE.get(index);
                 int j = 1;
                 for (SubTask st : o.list) {
-                    System.out.println("\tПодзадача " + j + ": " + st.getName());
+                    System.out.println("\tПодзадача " + j + ": " + st.getName() + " " + statusSubTask(st));
                     System.out.println("\tОписание: " + st.getName());
                     j++;
                 }
@@ -98,6 +187,19 @@ public class Manager {
         DONE.clear();
     }//Удаление всех задач
 
+    public void removeTask(int i){
+        if (!(NEW.isEmpty()) && NEW.containsKey(i)){
+            NEW.remove(i);
+            System.out.println("Задача " + i + " удалена");
+        } else if (!(IN_PROGRESS.isEmpty()) && IN_PROGRESS.containsKey(i)){
+            IN_PROGRESS.remove(i);
+            System.out.println("Задача " + i + " удалена");
+        } else if (!(DONE.isEmpty()) && DONE.containsKey(i)){
+            DONE.remove(i);
+            System.out.println("Задача " + i + " удалена");
+        } else System.out.println("Задачи с номером " + i + " в списке задач нет");
+    }
+
     public void returnAllTasks(HashMap map){//Вывод всех задач
         if (!(map.isEmpty())){
             for (int i = 0; i < index; i++){
@@ -107,7 +209,7 @@ public class Manager {
                     if (o.list != null) {
                         int j = 1;
                         for(SubTask st: o.list){
-                            System.out.println("\tПодзадача " + j + ": " + st.getName());
+                            System.out.println("\tПодзадача " + j + ": " + st.getName() + " " + statusSubTask(st));
                             j++;
                         }
                     }
@@ -122,6 +224,8 @@ public class Manager {
         System.out.println("2 - Получение списка всех задач");
         System.out.println("3 - Удаление всех задач");
         System.out.println("4 - Получение задачи по номеру");
+        System.out.println("5 - Обновить статус задачи");
+        System.out.println("6 - Удалить задачу");
         System.out.println("0 - Завершить программу");
 
     }
