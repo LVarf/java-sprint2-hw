@@ -1,24 +1,29 @@
-import java.util.HashMap;
 import java.util.Objects;
-import java.util.Scanner;
 
 public class Task {
-    protected String name;
+    protected String name;//описание задачи
     protected String description; //описание задачи
-    protected Integer status;
+    protected String status; //статус задачи
+    protected Integer id = 0;//id задачи
 
     public Task() {
-        this.status = 0;
+        this.status = "new";
     }
 
-    public void add(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите название задачи");
-        String name = scanner.nextLine();
-        System.out.println("Введите описание задачи");
-        String description = scanner.nextLine();
-        this.name = name;
-        this.description = description;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
