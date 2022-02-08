@@ -1,11 +1,22 @@
 public class SubTask extends Task{
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
+    private Integer epicId;//id эпика, к которому относится объект
+
+    public Integer getEpicId() {
+        return epicId;
+    }
+
+    public void setEpicId(Integer epicId) {
+        this.epicId = epicId;
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public String toString() {
+        return "SubTask{" +
+                "epicId=" + epicId +
+                ", id=" + getId() +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
+                '}';
     }
 }

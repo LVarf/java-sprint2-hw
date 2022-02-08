@@ -3,88 +3,86 @@ import java.util.HashMap;
 
 public class Manager {
 
-    private int index = 1;
-    HashMap<Integer, Epic> NEW = new HashMap<>();
-    HashMap<Integer, Epic> IN_PROGRESS = new HashMap<>();
-    HashMap<Integer, Epic> DONE = new HashMap<>();
+    private static int index = 1;
+    private static HashMap<Integer, Task> tasks = new HashMap<>();
+    private static HashMap<Integer, Task> epic = new HashMap<>();
+    private static HashMap<Integer, Task> subTasks = new HashMap<>();
 
-    public Epic getTasks(int index){//Метод возвращает задачу по идентификатору
-        if (!(NEW.isEmpty()) && NEW.containsKey(index)){
-            return NEW.get(index);
-        } else if (!(IN_PROGRESS.isEmpty()) && IN_PROGRESS.containsKey(index)) {
-            return IN_PROGRESS.get(index);
-        } else if (!(DONE.isEmpty()) && DONE.containsKey(index)) {
-            return DONE.get(index);
+    public Task getTasks(int index){//Метод возвращает задачу по идентификатору
+        if (!(tasks.isEmpty()) && tasks.containsKey(index)){
+            return tasks.get(index);
+        } else if (!(epic.isEmpty()) && epic.containsKey(index)) {
+            return epic.get(index);
+        } else if (!(subTasks.isEmpty()) && subTasks.containsKey(index)) {
+            return subTasks.get(index);
         } else return null;
     }//Метод возвращает задачу по идентификатору
 
     public void removeTask(Integer i){//Удаляет задачу по идентификатору
-        if (!(NEW.isEmpty()) && NEW.containsKey(i)){
-            NEW.remove(i);
-        } else if (!(IN_PROGRESS.isEmpty()) && IN_PROGRESS.containsKey(i)){
-            IN_PROGRESS.remove(i);
-        } else if (!(DONE.isEmpty()) && DONE.containsKey(i)){
-            DONE.remove(i);
+        if (!(tasks.isEmpty()) && tasks.containsKey(i)){
+            tasks.remove(i);
+        } else if (!(epic.isEmpty()) && epic.containsKey(i)){
+            epic.remove(i);
+        } else if (!(subTasks.isEmpty()) && subTasks.containsKey(i)){
+            subTasks.remove(i);
         }
     }//Удаляет задачу по идентификатору
 
+    public void updateTasks(Task o){//Метод для обновления задачи
+        int id = o.getId();
+        if (!(tasks.isEmpty()) && tasks.containsKey(id)) {
+            tasks.remove(id);
+            tasks.put(id, o);
+        } else if(!(epic.isEmpty()) && epic.containsKey(id)){
+            Epic obj = (Epic) o;
+            if (obj.getListSubTask().size() == 0 ){
+                epic.remove(id);
+                epic.put(id, o);
+            } else {
+                updateEpicStatus(obj);
+                epic.remove(id);
+                epic.put(id, o);
+            }
+        } else if(!(subTasks.isEmpty()) && subTasks.containsKey(id)) {
+            SubTask obj = (SubTask) o;
+            subTasks.remove(id);
+            subTasks.put(id, obj);
+            updateEpicStatus((Epic) epic.get(obj.getEpicId()));
+        }
+    }//Метод для обновления задачи
+
     public void removeAllTasks(){//Удаление всех задач
-        NEW.clear();
-        IN_PROGRESS.clear();
-        DONE.clear();
+        tasks.clear();
+        epic.clear();
+        subTasks.clear();
     }//Удаление всех задач
 
     public ArrayList returnAllTasks(){//Вывод всех задач
-        ArrayList<Epic> ls = new ArrayList<>();
+        ArrayList<Task> ls = new ArrayList<>();
         for (int i = 1; i < index; i++){
-            if (!(NEW.isEmpty()) && NEW.containsKey(i)) {
-                ls.add(NEW.get(i));
-            } else if(!(IN_PROGRESS.isEmpty()) && IN_PROGRESS.containsKey(i)){
-                ls.add(IN_PROGRESS.get(i));
-            } else if(!(DONE.isEmpty()) && DONE.containsKey(i)) {
-                ls.add(DONE.get(i));
+            if (!(tasks.isEmpty()) && tasks.containsKey(i)) {
+                ls.add(tasks.get(i));
+            } else if(!(epic.isEmpty()) && epic.containsKey(i)){
+                ls.add(epic.get(i));
+            } else if(!(subTasks.isEmpty()) && subTasks.containsKey(i)) {
+                ls.add(subTasks.get(i));
             }
         }
         return ls;
     }//Вывод всех задач
 
-    public void updateTasks(Epic o){//Метод для обновления задачи (всех полей, включая статус)
-        int index = o.getId();
-        if (!(NEW.isEmpty()) && NEW.containsKey(index)) {
-            if (o.getList() == null) {
-                remoteJustObject(NEW, o.getStatus(), index, o);
-            } else {
-                updateEpicStatus(o);
-                remoteJustObject(NEW, o.getStatus(), index, o);
-            }
-
-        } else if(!(IN_PROGRESS.isEmpty()) && IN_PROGRESS.containsKey(index)){
-            if (o.getList() == null){
-                remoteJustObject(IN_PROGRESS, o.getStatus(), index, o);
-            } else {
-                updateEpicStatus(o);
-                remoteJustObject(IN_PROGRESS, o.getStatus(), index, o);
-            }
-        } else if(!(DONE.isEmpty()) && DONE.containsKey(index)) {
-            if (o.getList() == null){
-                remoteJustObject(DONE, o.getStatus(), index, o);
-            } else {
-                updateEpicStatus(o);
-                remoteJustObject(DONE, o.getStatus(), index, o);
-            }
-        }
-    }//Метод для обновления задачи (всех полей, включая статус)
-
     public void updateEpicStatus(Epic o){//метод актуализирует поле-статаус эпика на основе подзадач
 
         boolean checkStatus = false;//дополнительная переменная для определения статуса эпика
-        for (SubTask sT: o.getList()){
-            if (!sT.getStatus().equals(o.getList().get(0).getStatus())) checkStatus = true;
+        for (Integer i: o.getListSubTask()){
+            SubTask sT = (SubTask) subTasks.get(i);
+            if (!sT.getStatus().equals(subTasks.get(o.getListSubTask().get(0)).getStatus())) checkStatus = true;
         }
         if (checkStatus) {
             o.setStatus("in_progress");
         } else {
-            for (SubTask sT: o.getList()){
+            for (Integer i: o.getListSubTask()){
+                SubTask sT = (SubTask) subTasks.get(i);
                 if (!sT.getStatus().equals("new")) checkStatus = true;
             }
             if (!checkStatus) {
@@ -95,36 +93,27 @@ public class Manager {
         }
     }//ВСПОМОГАТЕЛЬНЫЙ метод актуализирует поле-статаус эпика на основе подзадач
 
-    public void addNewTask(Epic o){//Добавление новой задачи
-//        Epic epic = (Epic) o;
-        NEW.put(index, o);
+    public void addNewSubTask(SubTask obj){//Добавление новой подзадачи
+        SubTask sT = (SubTask) obj;
+        Epic e = (Epic) epic.get(sT.getEpicId());
+        subTasks.put(index, sT);
+        sT.setId(index);
+        e.getListSubTask().add(sT.getId());
+        index++;
+        updateEpicStatus(e);
+    }//Добавление новой подзадачи
+
+    public void addNewTask(Task obj){//Добавление новой задачи
+        Task o = (Task) obj;
+        tasks.put(index, o);
         o.setId(index);
         index++;
     }//Добавление новой задачи
 
-    public void remoteJustObject(HashMap map, String status, int index, Epic o){//метод для перезаписи простой задачи (без подзадач)
-        if(status.equals("new")){//При такой логике пользователь сможет переводить любую задачу в любой статус
-            map.remove(index);
-            NEW.put(index, o);
-        } else if(status.equals("in_progress")) {
-            map.remove(index);
-            IN_PROGRESS.put(index, o);
-        } else if(status.equals("done")){
-            map.remove(index);
-            DONE.put(index, o);
-        }
-    }//ВСПОМОГАТЕЛЬНЫЙ метод
-    //для перезаписи задачи
-
-    /*
-        public String statusSubTask(SubTask o){
-            String result = "";
-            if (o.stat == 0){
-                result = "новая";
-            } else if (o.stat == 1) {
-                result = "в процессе выполнения";
-            } else result = "выполнена";
-            return result;
-        }
-    */
+    public void addNewEpic(Epic obj){//Добавление нового эпика
+        Epic o = (Epic) obj;
+        epic.put(index, o);
+        o.setId(index);
+        index++;
+    }//Добавление нового эпика
 }

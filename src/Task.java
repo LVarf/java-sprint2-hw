@@ -1,10 +1,10 @@
 import java.util.Objects;
 
 public class Task {
-    protected String name;//описание задачи
-    protected String description; //описание задачи
-    protected String status; //статус задачи
-    protected Integer id = 0;//id задачи
+    private String name;//описание задачи
+    private String description; //описание задачи
+    private String status; //статус задачи
+    private Integer id;//id задачи
 
     public Task() {
         this.status = "new";
@@ -62,5 +62,15 @@ public class Task {
             hash += description.hashCode();
         }
         return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }
