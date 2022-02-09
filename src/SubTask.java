@@ -1,11 +1,11 @@
 public class SubTask extends Task{
-    private Integer epicId;//id эпика, к которому относится объект
+    private Long epicId;//id эпика, к которому относится объект
 
-    public Integer getEpicId() {
+    public Long getEpicId() {
         return epicId;
     }
 
-    public void setEpicId(Integer epicId) {
+    public void setEpicId(Long epicId) {
         this.epicId = epicId;
     }
 

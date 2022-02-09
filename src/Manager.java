@@ -3,12 +3,12 @@ import java.util.HashMap;
 
 public class Manager {
 
-    private int index = 1;
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Task> epic = new HashMap<>();
-    private HashMap<Integer, Task> subTasks = new HashMap<>();
+    private long index = 1;
+    private HashMap<Long, Task> tasks = new HashMap<>();
+    private HashMap<Long, Task> epic = new HashMap<>();
+    private HashMap<Long, Task> subTasks = new HashMap<>();
 
-    public Task getTasks(int index){//Метод возвращает задачу по идентификатору
+    public Task getTasks(long index){//Метод возвращает задачу по идентификатору
         if (!(tasks.isEmpty()) && tasks.containsKey(index)){
             return tasks.get(index);
         } else if (!(epic.isEmpty()) && epic.containsKey(index)) {
@@ -18,7 +18,7 @@ public class Manager {
         } else return null;
     }//Метод возвращает задачу по идентификатору
 
-    public void removeTask(Integer i){//Удаляет задачу по идентификатору
+    public void removeTask(Long i){//Удаляет задачу по идентификатору
         if (!(tasks.isEmpty()) && tasks.containsKey(i)){
             tasks.remove(i);
         } else if (!(epic.isEmpty()) && epic.containsKey(i)){
@@ -29,7 +29,7 @@ public class Manager {
     }//Удаляет задачу по идентификатору
 
     public void updateTasks(Task o){//Метод для обновления задачи
-        int id = o.getId();
+        long id = o.getId();
         if (!(tasks.isEmpty()) && tasks.containsKey(id)) {
             tasks.remove(id);
             tasks.put(id, o);
@@ -59,7 +59,7 @@ public class Manager {
 
     public ArrayList<Task> returnAllTasks(){//Вывод всех задач
         ArrayList<Task> ls = new ArrayList<>();
-        for (int i = 1; i < index; i++){
+        for (long i = 1; i < index; i++){
             if (!(tasks.isEmpty()) && tasks.containsKey(i)) {
                 ls.add(tasks.get(i));
             } else if(!(epic.isEmpty()) && epic.containsKey(i)){
@@ -74,14 +74,14 @@ public class Manager {
     public void updateEpicStatus(Epic o){//метод актуализирует поле-статаус эпика на основе подзадач
 
         boolean checkStatus = false;//дополнительная переменная для определения статуса эпика
-        for (Integer i: o.getListSubTask()){
+        for (Long i: o.getListSubTask()){
             SubTask sT = (SubTask) subTasks.get(i);
             if (!sT.getStatus().equals(subTasks.get(o.getListSubTask().get(0)).getStatus())) checkStatus = true;
         }
         if (checkStatus) {
             o.setStatus(Status.IN_PROGRESS);
         } else {
-            for (Integer i: o.getListSubTask()){
+            for (Long i: o.getListSubTask()){
                 SubTask sT = (SubTask) subTasks.get(i);
                 if (!Status.NEW.equals(sT.getStatus())) checkStatus = true;
             }
@@ -117,11 +117,11 @@ public class Manager {
         generateId(index);
     }//Добавление нового эпика
 
-    private void generateId(int index) {
+    private void generateId(long index) {
         setIndex(++index);
     }
 
-    public void setIndex(int index) {
+    public void setIndex(long index) {
         this.index = index;
     }
 }

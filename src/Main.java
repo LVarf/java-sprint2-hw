@@ -47,7 +47,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Введите номер задачи");
-        int i = scanner.nextInt();
+        long i = scanner.nextLong();
         manager.removeTask(i);
         System.out.println("Задача " + i + " удалена");
 
@@ -120,7 +120,7 @@ public class Main {
             case 3:
                 System.out.println("К какому эпику относится подзадача");
                 SubTask sT = new SubTask();
-                sT.setEpicId((new Scanner(System.in)).nextInt());
+                sT.setEpicId((new Scanner(System.in)).nextLong());
                 System.out.println("Введите название подзадачи");
                 sT.setName((new Scanner(System.in)).nextLine());
                 System.out.println("Введите описание подзадачи");

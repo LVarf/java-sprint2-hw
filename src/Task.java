@@ -4,7 +4,7 @@ public class Task {
     private String name;//описание задачи
     private String description; //описание задачи
     private Status status; //статус задачи
-    private Integer id;//id задачи
+    private Long id;//id задачи
 
     public Task() {
         this.status = Status.NEW;
@@ -18,11 +18,11 @@ public class Task {
         this.status = status;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

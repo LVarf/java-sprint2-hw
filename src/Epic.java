@@ -2,18 +2,18 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Integer> listSubTask;
+    private ArrayList<Long> listSubTask;
 
     public Epic() {
         super();
         this.listSubTask = new ArrayList<>();
     }
 
-    public void setListSubTask(ArrayList<Integer> listSubTask) {
+    public void setListSubTask(ArrayList<Long> listSubTask) {
         this.listSubTask = listSubTask;
     }
 
-    public ArrayList<Integer> getListSubTask() {
+    public ArrayList<Long> getListSubTask() {
         return listSubTask;
     }
 
