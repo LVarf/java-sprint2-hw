@@ -99,7 +99,7 @@ public class Manager {
         subTasks.put(index, sT);
         sT.setId(index);
         e.getListSubTask().add(sT.getId());
-        index++;
+        generateId(index);
         updateEpicStatus(e);
     }//Добавление новой подзадачи
 
@@ -107,13 +107,17 @@ public class Manager {
         Task o = (Task) obj;
         tasks.put(index, o);
         o.setId(index);
-        index++;
+        generateId(index);
     }//Добавление новой задачи
 
     public void addNewEpic(Epic obj){//Добавление нового эпика
         Epic o = (Epic) obj;
         epic.put(index, o);
         o.setId(index);
-        index++;
+        generateId(index);
     }//Добавление нового эпика
+
+    private void generateId(int index) {
+        index++;
+    }
 }
