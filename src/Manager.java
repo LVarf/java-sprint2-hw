@@ -79,16 +79,16 @@ public class Manager {
             if (!sT.getStatus().equals(subTasks.get(o.getListSubTask().get(0)).getStatus())) checkStatus = true;
         }
         if (checkStatus) {
-            o.setStatus("in_progress");
+            o.setStatus(Status.IN_PROGRESS);
         } else {
             for (Integer i: o.getListSubTask()){
                 SubTask sT = (SubTask) subTasks.get(i);
-                if (!sT.getStatus().equals("new")) checkStatus = true;
+                if (!Status.NEW.equals(sT.getStatus())) checkStatus = true;
             }
             if (!checkStatus) {
-                o.setStatus("new");
+                o.setStatus(Status.NEW);
             } else {
-                o.setStatus("done");
+                o.setStatus(Status.DONE);
             }
         }
     }//ВСПОМОГАТЕЛЬНЫЙ метод актуализирует поле-статаус эпика на основе подзадач

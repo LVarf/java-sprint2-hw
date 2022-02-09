@@ -14,7 +14,7 @@ public class SubTask extends Task{
         return "SubTask{" +
                 "epicId=" + epicId +
                 ", id=" + getId() +
-                "name='" + getName() + '\'' +
+                ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 '}';
