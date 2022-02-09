@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
         Manager manager = new Manager();
-        //start(manager); //раскомментировать для проверки работы программы
+        start(manager); //раскомментировать для проверки работы программы
     }
     public static void start(Manager manager) {
         Scanner scanner = new Scanner(System.in);
@@ -62,13 +62,13 @@ public class Main {
             System.out.println("Теперь задача: 1 - новая, 2 - в процессе, 3 - выполнена");
             switch (scanner.nextInt()){
                 case 1:
-                    task.setStatus("new");
+                    task.setStatus(Status.NEW);
                     break;
                 case 2:
-                    task.setStatus("in_progress");
+                    task.setStatus(Status.IN_PROGRESS);
                     break;
                 case 3:
-                    task.setStatus("done");
+                    task.setStatus(Status.DONE);
                     break;
                 default:
                     System.out.println("Такой статус не предусмотрен");
@@ -79,13 +79,13 @@ public class Main {
                 System.out.println("Теперь подзадача: 1 - новая, 2 - в процессе, 3 - выполнена");
                 switch (scanner.nextInt()){
                     case 1:
-                        sT.setStatus("new");
+                        sT.setStatus(Status.NEW);
                         break;
                     case 2:
-                        sT.setStatus("in_progress");
+                        sT.setStatus(Status.IN_PROGRESS);
                         break;
                     case 3:
-                        sT.setStatus("done");
+                        sT.setStatus(Status.DONE);
                         break;
                     default:
                         System.out.println("Такой статус не предусмотрен");
