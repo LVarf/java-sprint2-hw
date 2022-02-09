@@ -3,10 +3,10 @@ import java.util.HashMap;
 
 public class Manager {
 
-    private static int index = 1;
-    private static HashMap<Integer, Task> tasks = new HashMap<>();
-    private static HashMap<Integer, Task> epic = new HashMap<>();
-    private static HashMap<Integer, Task> subTasks = new HashMap<>();
+    private int index = 1;
+    private HashMap<Integer, Task> tasks = new HashMap<>();
+    private HashMap<Integer, Task> epic = new HashMap<>();
+    private HashMap<Integer, Task> subTasks = new HashMap<>();
 
     public Task getTasks(int index){//Метод возвращает задачу по идентификатору
         if (!(tasks.isEmpty()) && tasks.containsKey(index)){
