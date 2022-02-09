@@ -3,18 +3,18 @@ import java.util.Objects;
 public class Task {
     private String name;//описание задачи
     private String description; //описание задачи
-    private String status; //статус задачи
+    private Status status; //статус задачи
     private Integer id;//id задачи
 
     public Task() {
-        this.status = "new";
+        this.status = Status.NEW;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
