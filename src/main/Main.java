@@ -1,3 +1,7 @@
+package main;
+
+import utility.*;
+
 import java.util.Scanner;
 
 public class Main {
