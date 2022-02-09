@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
         Manager manager = new Manager();
-        //start(manager); //раскомментировать для проверки работы программы
+        start(manager); //раскомментировать для проверки работы программы
     }
     public static void start(Manager manager) {
         Scanner scanner = new Scanner(System.in);

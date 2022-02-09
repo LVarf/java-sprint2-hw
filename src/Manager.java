@@ -57,7 +57,7 @@ public class Manager {
         subTasks.clear();
     }//Удаление всех задач
 
-    public ArrayList returnAllTasks(){//Вывод всех задач
+    public ArrayList<Task> returnAllTasks(){//Вывод всех задач
         ArrayList<Task> ls = new ArrayList<>();
         for (int i = 1; i < index; i++){
             if (!(tasks.isEmpty()) && tasks.containsKey(i)) {
@@ -118,6 +118,10 @@ public class Manager {
     }//Добавление нового эпика
 
     private void generateId(int index) {
-        index++;
+        setIndex(++index);
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
