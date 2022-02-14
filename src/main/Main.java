@@ -130,8 +130,6 @@ public class Main {
                 System.out.println("Введите описание подзадачи");
                 sT.setDescription((new Scanner(System.in)).nextLine());
                 manager.addNewSubTask(sT);
-                Epic e = (Epic) manager.getTasks(sT.getEpicId());
-                e.getListSubTask().add(sT.getId());
                 break;
             default:
                 System.out.println("Такой команды не предусмотрено");
@@ -140,8 +138,7 @@ public class Main {
     }//Создание нового объекта
 
     static void writeAllTasks(Manager manager){
-        for(Object obj: manager.returnAllTasks()){
-            Task task = (Task) obj;
+        for(Task task: manager.returnAllTasks()){
             System.out.println(task.toString());
         }
     }//Вывод всех задач

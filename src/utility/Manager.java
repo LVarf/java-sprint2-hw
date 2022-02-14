@@ -80,9 +80,9 @@ public class Manager {
             SubTask sT = (SubTask) subTasks.get(i);
             if (!sT.getStatus().equals(subTasks.get(o.getListSubTask().get(0)).getStatus())) checkStatus = true;
         }
-        if (checkStatus) {
+        if (checkStatus && (o.getListSubTask().size() > 1)) {
             o.setStatus(Status.IN_PROGRESS);
-        } else {
+        } else if (o.getListSubTask().size() > 1){
             for (Long i: o.getListSubTask()){
                 SubTask sT = (SubTask) subTasks.get(i);
                 if (!Status.NEW.equals(sT.getStatus())) checkStatus = true;
@@ -92,17 +92,20 @@ public class Manager {
             } else {
                 o.setStatus(Status.DONE);
             }
+        } else if (o.getListSubTask().size() == 1) {
+            SubTask sT = (SubTask) subTasks.get(o.getListSubTask().get(0));
+            o.setStatus(sT.getStatus());
         }
     }//ВСПОМОГАТЕЛЬНЫЙ метод актуализирует поле-статаус эпика на основе подзадач
 
     public void addNewSubTask(SubTask obj){//Добавление новой подзадачи
         SubTask sT = (SubTask) obj;
         Epic e = (Epic) epic.get(sT.getEpicId());
-        subTasks.put(index, sT);
         sT.setId(index);
+        subTasks.put(index, sT);
         e.getListSubTask().add(sT.getId());
-        generateId(index);
         updateEpicStatus(e);
+        generateId(index);
     }//Добавление новой подзадачи
 
     public void addNewTask(Task obj){//Добавление новой задачи
