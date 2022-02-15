@@ -1,7 +1,5 @@
 package utility;
 
-import utility.Task;
-
 public class SubTask extends Task {
     private Long epicId;//id эпика, к которому относится объект
 
