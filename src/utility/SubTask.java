@@ -1,11 +1,15 @@
-public class SubTask extends Task{
-    private Integer epicId;//id эпика, к которому относится объект
+package utility;
 
-    public Integer getEpicId() {
+import utility.Task;
+
+public class SubTask extends Task {
+    private Long epicId;//id эпика, к которому относится объект
+
+    public Long getEpicId() {
         return epicId;
     }
 
-    public void setEpicId(Integer epicId) {
+    public void setEpicId(Long epicId) {
         this.epicId = epicId;
     }
 

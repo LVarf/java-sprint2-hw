@@ -1,3 +1,7 @@
+package main;
+
+import utility.*;
+
 import java.util.Scanner;
 
 public class Main {
@@ -47,7 +51,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Введите номер задачи");
-        int i = scanner.nextInt();
+        long i = scanner.nextLong();
         manager.removeTask(i);
         System.out.println("Задача " + i + " удалена");
 
@@ -120,14 +124,12 @@ public class Main {
             case 3:
                 System.out.println("К какому эпику относится подзадача");
                 SubTask sT = new SubTask();
-                sT.setEpicId((new Scanner(System.in)).nextInt());
+                sT.setEpicId((new Scanner(System.in)).nextLong());
                 System.out.println("Введите название подзадачи");
                 sT.setName((new Scanner(System.in)).nextLine());
                 System.out.println("Введите описание подзадачи");
                 sT.setDescription((new Scanner(System.in)).nextLine());
                 manager.addNewSubTask(sT);
-                Epic e = (Epic) manager.getTasks(sT.getEpicId());
-                e.getListSubTask().add(sT.getId());
                 break;
             default:
                 System.out.println("Такой команды не предусмотрено");
@@ -136,8 +138,7 @@ public class Main {
     }//Создание нового объекта
 
     static void writeAllTasks(Manager manager){
-        for(Object obj: manager.returnAllTasks()){
-            Task task = (Task) obj;
+        for(Task task: manager.returnAllTasks()){
             System.out.println(task.toString());
         }
     }//Вывод всех задач
