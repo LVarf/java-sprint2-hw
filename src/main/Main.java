@@ -7,8 +7,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new InMemoryTaskManager();
-        start(taskManager); //раскомментировать для проверки работы программы
+        //start(Managers.getDefault()); //раскомментировать для проверки работы программы
     }
     public static void start(TaskManager taskManager) {
         Scanner scanner = new Scanner(System.in);
