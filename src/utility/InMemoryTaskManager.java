@@ -3,13 +3,14 @@ package utility;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Manager {
-
+public class InMemoryTaskManager implements TaskManager{
+//
     private long index = 1;
     private HashMap<Long, Task> tasks = new HashMap<>();
     private HashMap<Long, Task> epic = new HashMap<>();
     private HashMap<Long, Task> subTasks = new HashMap<>();
 
+    @Override
     public Task getTasks(long index){//Метод возвращает задачу по идентификатору
         if (!(tasks.isEmpty()) && tasks.containsKey(index)){
             return tasks.get(index);
@@ -20,6 +21,7 @@ public class Manager {
         } else return null;
     }//Метод возвращает задачу по идентификатору
 
+    @Override
     public void removeTask(Long i){//Удаляет задачу по идентификатору
         if (!(tasks.isEmpty()) && tasks.containsKey(i)){
             tasks.remove(i);
@@ -30,6 +32,7 @@ public class Manager {
         }
     }//Удаляет задачу по идентификатору
 
+    @Override
     public void updateTasks(Task o){//Метод для обновления задачи
         long id = o.getId();
         if (!(tasks.isEmpty()) && tasks.containsKey(id)) {
@@ -53,12 +56,14 @@ public class Manager {
         }
     }//Метод для обновления задачи
 
+    @Override
     public void removeAllTasks(){//Удаление всех задач
         tasks.clear();
         epic.clear();
         subTasks.clear();
     }//Удаление всех задач
 
+    @Override
     public ArrayList<Task> returnAllTasks(){//Вывод всех задач
         ArrayList<Task> ls = new ArrayList<>();
         for (long i = 1; i < index; i++){
@@ -98,6 +103,7 @@ public class Manager {
         }
     }//ВСПОМОГАТЕЛЬНЫЙ метод актуализирует поле-статаус эпика на основе подзадач
 
+    @Override
     public void addNewSubTask(SubTask obj){//Добавление новой подзадачи
         SubTask sT = (SubTask) obj;
         Epic e = (Epic) epic.get(sT.getEpicId());
@@ -108,6 +114,7 @@ public class Manager {
         generateId(index);
     }//Добавление новой подзадачи
 
+    @Override
     public void addNewTask(Task obj){//Добавление новой задачи
         Task o = (Task) obj;
         tasks.put(index, o);
@@ -115,6 +122,7 @@ public class Manager {
         generateId(index);
     }//Добавление новой задачи
 
+    @Override
     public void addNewEpic(Epic obj){//Добавление нового эпика
         Epic o = (Epic) obj;
         epic.put(index, o);

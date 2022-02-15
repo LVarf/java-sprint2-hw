@@ -7,26 +7,26 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Manager manager = new Manager();
-        start(manager); //раскомментировать для проверки работы программы
+        TaskManager taskManager = new InMemoryTaskManager();
+        start(taskManager); //раскомментировать для проверки работы программы
     }
-    public static void start(Manager manager) {
+    public static void start(TaskManager taskManager) {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             print();
             switch (scanner.nextInt()) {
                 case 1://Создание нового объекта
-                    createNewTask(manager);
+                    createNewTask(taskManager);
                     break;
                 case 2:
-                    writeAllTasks(manager);
+                    writeAllTasks(taskManager);
                     break;
                 case 3:
-                    changeStatusOfTask(manager);
+                    changeStatusOfTask(taskManager);
                     break;
                 case 4:
-                    removeTask(manager);
+                    removeTask(taskManager);
                     break;
                 case 0:
                     System.out.println("Программа успещно завершила работу");
@@ -47,20 +47,20 @@ public class Main {
         System.out.println("0 - Завершить программу");
     }//Контекстное меню
 
-    static void removeTask(Manager manager) {
+    static void removeTask(TaskManager taskManager) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Введите номер задачи");
         long i = scanner.nextLong();
-        manager.removeTask(i);
+        taskManager.removeTask(i);
         System.out.println("Задача " + i + " удалена");
 
     }
 
-    static void changeStatusOfTask(Manager manager) {
+    static void changeStatusOfTask(TaskManager taskManager) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите номер задачи или подзадачи");
-        Object o = manager.getTasks(scanner.nextInt());
+        Object o = taskManager.getTasks(scanner.nextInt());
         if ((o.getClass() != (new SubTask()).getClass()) && (o.getClass() != (new Epic()).getClass())){
             Task task = (Task) o;
             System.out.println("Теперь задача: 1 - новая, 2 - в процессе, 3 - выполнена");
@@ -77,7 +77,7 @@ public class Main {
                 default:
                     System.out.println("Такой статус не предусмотрен");
             }
-            manager.updateTasks(task);
+            taskManager.updateTasks(task);
         } else if (o.getClass() != (new Epic()).getClass()) {
             SubTask sT = (SubTask) o;
                 System.out.println("Теперь подзадача: 1 - новая, 2 - в процессе, 3 - выполнена");
@@ -94,11 +94,11 @@ public class Main {
                     default:
                         System.out.println("Такой статус не предусмотрен");
                 }
-            manager.updateTasks(sT);
+            taskManager.updateTasks(sT);
         } else System.out.println("Нет задачи / подзадачи с таким номером");
     }
 
-    static void createNewTask(Manager manager){
+    static void createNewTask(TaskManager taskManager){
         System.out.println("Что вы хотите создать?");
         System.out.println("1 - задачу");
         System.out.println("2 - эпик");
@@ -111,7 +111,7 @@ public class Main {
                 task.setName((new Scanner(System.in)).nextLine());
                 System.out.println("Введите описание задачи");
                 task.setDescription((new Scanner(System.in)).nextLine());
-                manager.addNewTask(task);
+                taskManager.addNewTask(task);
                 break;
             case 2:
                 System.out.println("Введите название эпика");
@@ -119,7 +119,7 @@ public class Main {
                 epic.setName((new Scanner(System.in)).nextLine());
                 System.out.println("Введите описание эпика");
                 epic.setDescription((new Scanner(System.in)).nextLine());
-                manager.addNewEpic(epic);
+                taskManager.addNewEpic(epic);
                 break;
             case 3:
                 System.out.println("К какому эпику относится подзадача");
@@ -129,7 +129,7 @@ public class Main {
                 sT.setName((new Scanner(System.in)).nextLine());
                 System.out.println("Введите описание подзадачи");
                 sT.setDescription((new Scanner(System.in)).nextLine());
-                manager.addNewSubTask(sT);
+                taskManager.addNewSubTask(sT);
                 break;
             default:
                 System.out.println("Такой команды не предусмотрено");
@@ -137,8 +137,8 @@ public class Main {
         }
     }//Создание нового объекта
 
-    static void writeAllTasks(Manager manager){
-        for(Task task: manager.returnAllTasks()){
+    static void writeAllTasks(TaskManager taskManager){
+        for(Task task: taskManager.returnAllTasks()){
             System.out.println(task.toString());
         }
     }//Вывод всех задач
