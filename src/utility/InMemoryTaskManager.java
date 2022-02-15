@@ -2,22 +2,25 @@ package utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager{
-//
+
+    private static final int SIZE_OF_HISTORY_LIST = 10;
     private long index = 1;
     private HashMap<Long, Task> tasks = new HashMap<>();
     private HashMap<Long, Task> epic = new HashMap<>();
     private HashMap<Long, Task> subTasks = new HashMap<>();
+    private List<Task>  historyList= new ArrayList<>();
 
     @Override
-    public Task getTasks(long index){//Метод возвращает задачу по идентификатору
-        if (!(tasks.isEmpty()) && tasks.containsKey(index)){
-            return tasks.get(index);
-        } else if (!(epic.isEmpty()) && epic.containsKey(index)) {
-            return epic.get(index);
-        } else if (!(subTasks.isEmpty()) && subTasks.containsKey(index)) {
-            return subTasks.get(index);
+    public Task getTasks(long id){//Метод возвращает задачу по идентификатору
+        if (!(tasks.isEmpty()) && tasks.containsKey(id)){
+            return getTusk(id);
+        } else if (!(epic.isEmpty()) && epic.containsKey(id)) {
+            return getEpic(id);
+        } else if (!(subTasks.isEmpty()) && subTasks.containsKey(id)) {
+            return getEpic(id);
         } else return null;
     }//Метод возвращает задачу по идентификатору
 
@@ -31,6 +34,53 @@ public class InMemoryTaskManager implements TaskManager{
             subTasks.remove(i);
         }
     }//Удаляет задачу по идентификатору
+
+    @Override
+    public ArrayList<Task> returnAllTasks(){//Вывод всех задач
+        ArrayList<Task> ls = new ArrayList<>();
+        for (long i = 1; i < index; i++){
+            if (!(tasks.isEmpty()) && tasks.containsKey(i)) {
+                ls.add(getTusk(i));
+            } else if(!(epic.isEmpty()) && epic.containsKey(i)){
+                ls.add(getEpic(i));
+            } else if(!(subTasks.isEmpty()) && subTasks.containsKey(i)) {
+                ls.add(getSubTusk(i));
+            }
+        }
+        return ls;
+    }//Вывод всех задач
+
+    @Override
+    public List<Task> history() {
+        return historyList;
+    }//Метод возвращает список истории
+
+    private void checkSizeOfHistoryListByTen() {
+        if (historyList.size() >= SIZE_OF_HISTORY_LIST) {
+            historyList.remove(0);
+        }
+    }//Вспомогательный метод проверяет размер списка истории
+
+    private Task getTusk(long id) {
+        Task task = (Task) tasks.get(id);
+        checkSizeOfHistoryListByTen();
+        historyList.add(task);
+        return task;
+    }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
+
+    private SubTask getSubTusk(long id) {
+        SubTask sT = (SubTask) subTasks.get(id);
+        checkSizeOfHistoryListByTen();
+        historyList.add(sT);
+        return sT;
+    }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
+
+    private Epic getEpic(long id) {
+        Epic e = (Epic) epic.get(id);
+        checkSizeOfHistoryListByTen();
+        historyList.add(e);
+        return e;
+    }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
 
     @Override
     public void updateTasks(Task o){//Метод для обновления задачи
@@ -62,21 +112,6 @@ public class InMemoryTaskManager implements TaskManager{
         epic.clear();
         subTasks.clear();
     }//Удаление всех задач
-
-    @Override
-    public ArrayList<Task> returnAllTasks(){//Вывод всех задач
-        ArrayList<Task> ls = new ArrayList<>();
-        for (long i = 1; i < index; i++){
-            if (!(tasks.isEmpty()) && tasks.containsKey(i)) {
-                ls.add(tasks.get(i));
-            } else if(!(epic.isEmpty()) && epic.containsKey(i)){
-                ls.add(epic.get(i));
-            } else if(!(subTasks.isEmpty()) && subTasks.containsKey(i)) {
-                ls.add(subTasks.get(i));
-            }
-        }
-        return ls;
-    }//Вывод всех задач
 
     public void updateEpicStatus(Epic o){//метод актуализирует поле-статаус эпика на основе подзадач
 

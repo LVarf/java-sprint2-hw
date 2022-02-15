@@ -1,7 +1,16 @@
 package utility;
 
 public enum Status {
-    NEW,
-    IN_PROGRESS,
-    DONE
+    NEW("New"),
+    IN_PROGRESS(""),
+    DONE("");
+    private final String typeOfStatus;
+
+    Status(String status) {
+        this.typeOfStatus = status;
+    }
+
+    public String getName() {
+        return typeOfStatus;
+    }
 }

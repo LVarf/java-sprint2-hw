@@ -28,6 +28,9 @@ public class Main {
                 case 4:
                     removeTask(taskManager);
                     break;
+                case 5:
+                    writeHistory(taskManager);
+                    break;
                 case 0:
                     System.out.println("Программа успещно завершила работу");
                     System.exit(0);
@@ -38,12 +41,19 @@ public class Main {
         }
     }
 
+    static void writeHistory(TaskManager taskManager) {
+        for (Task task: taskManager.history()) {
+            System.out.println("Задача " + task.getId() + " " + task.getName());
+        }
+    }
+
     static void print() {
         System.out.println("Что вы хотите сделать?");
         System.out.println("1 - Создать новую задачу");
         System.out.println("2 - Вывести все задачи");
         System.out.println("3 - Поменять статус задачи");
         System.out.println("4 - Удалить задачу по номеру");
+        System.out.println("5 - Показать историю запросов");
         System.out.println("0 - Завершить программу");
     }//Контекстное меню
 

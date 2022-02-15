@@ -1,24 +1,27 @@
 package utility;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
-        public Task getTasks(long index);//Метод возвращает задачу по идентификатору
+        public Task getTasks(long index);//Метод возвращает экземпляр по идентификатору
 
-        public void removeTask(Long i);//Удаляет задачу по идентификатору
+        public void removeTask(Long i);//Удаляет экземпляр по идентификатору
 
-        public void updateTasks(Task o);//Метод для обновления задачи
+        public void updateTasks(Task o);//Метод для обновления экземпляра
 
-        public void removeAllTasks();//Удаление всех задач
+        public void removeAllTasks();//Удаление всех экземпляров
 
-        public ArrayList<Task> returnAllTasks();//Вывод всех задач
+        public ArrayList<Task> returnAllTasks();//Вывод всех экземпляров
 
-        public void addNewSubTask(SubTask obj);//Добавление новой подзадачи
+        public void addNewSubTask(SubTask obj);//Добавление нового подэкземпляр
 
-        public void addNewTask(Task obj);//Добавление новой задачи
+        public void addNewTask(Task obj);//Добавление нового экземпляра
 
-        public void addNewEpic(Epic obj);//Добавление нового эпика
+        public void addNewEpic(Epic obj);//Добавление нового эпикаэкземпляра
+
+        public List<Task> history();
 
 
 }
