@@ -10,13 +10,11 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager{
 
-    private static final int SIZE_OF_HISTORY_LIST = 10;
     private long index = 1;
     private HashMap<Long, Task> tasks = new HashMap<>();
     private HashMap<Long, Task> epic = new HashMap<>();
     private HashMap<Long, Task> subTasks = new HashMap<>();
     private final HistoryManager inMemoryHistoryManager;
-    private List<Task>  historyList= new ArrayList<>();
 
     public InMemoryTaskManager() {
         this.inMemoryHistoryManager = new InMemoryHistoryManager();
@@ -61,14 +59,8 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public List<Task> history() {
-        return historyList;
+        return inMemoryHistoryManager.getHistory();
     }//Метод возвращает список истории
-
-    private void checkSizeOfHistoryListByTen() {
-        if (historyList.size() >= SIZE_OF_HISTORY_LIST) {
-            historyList.remove(0);
-        }
-    }//Вспомогательный метод проверяет размер списка истории
 
     private Task getTusk(long id) {
         Task task = (Task) tasks.get(id);
