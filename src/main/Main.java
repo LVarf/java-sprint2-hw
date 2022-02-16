@@ -1,5 +1,6 @@
 package main;
 
+import tasks.*;
 import utility.*;
 
 import java.util.Scanner;

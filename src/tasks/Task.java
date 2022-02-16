@@ -1,4 +1,6 @@
-package utility;
+package tasks;
+
+import utility.Status;
 
 import java.util.Objects;
 
