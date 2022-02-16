@@ -10,14 +10,14 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager{
 
-    private long index = 1;
+    private long index = 0;
     private HashMap<Long, Task> tasks = new HashMap<>();
     private HashMap<Long, Task> epic = new HashMap<>();
     private HashMap<Long, Task> subTasks = new HashMap<>();
     private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
-        this.inMemoryHistoryManager = new InMemoryHistoryManager();
+        this.inMemoryHistoryManager = Managers.getHistoryManager();
     }
 
     @Override
@@ -139,35 +139,29 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public void addNewSubTask(SubTask obj){//Добавление новой подзадачи
         SubTask sT = (SubTask) obj;
-        Epic e = (Epic) epic.get(sT.getEpicId());
-        sT.setId(index);
-        subTasks.put(index, sT);
-        e.getListSubTask().add(sT.getId());
-        updateEpicStatus(e);
-        generateId(index);
+        Epic e = (Epic) epic.get(sT.getEpicId());//вернуть epic по id из subTask
+        sT.setId(generateId());//присвоить subTask свой id
+        subTasks.put(index, sT);//записать subTask в свою таблицу
+        e.getListSubTask().add(sT.getId());//добавить id subTask в поле-список эпика
+        updateEpicStatus(e);//обновить поле-статус эпика
     }//Добавление новой подзадачи
 
     @Override
     public void addNewTask(Task obj){//Добавление новой задачи
         Task o = (Task) obj;
+        o.setId(generateId());
         tasks.put(index, o);
-        o.setId(index);
-        generateId(index);
     }//Добавление новой задачи
 
     @Override
     public void addNewEpic(Epic obj){//Добавление нового эпика
         Epic o = (Epic) obj;
+        o.setId(generateId());
         epic.put(index, o);
-        o.setId(index);
-        generateId(index);
     }//Добавление нового эпика
 
-    private void generateId(long index) {
-        setIndex(++index);
+    private long generateId() {
+        return ++index;
     }
 
-    public void setIndex(long index) {
-        this.index = index;
-    }
 }
