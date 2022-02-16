@@ -1,4 +1,4 @@
-package utility;
+package utilityTasks;
 
 public enum Status {
     NEW("New"),
