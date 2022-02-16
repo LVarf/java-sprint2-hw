@@ -15,7 +15,12 @@ public class InMemoryTaskManager implements TaskManager{
     private HashMap<Long, Task> tasks = new HashMap<>();
     private HashMap<Long, Task> epic = new HashMap<>();
     private HashMap<Long, Task> subTasks = new HashMap<>();
+    private final HistoryManager inMemoryHistoryManager;
     private List<Task>  historyList= new ArrayList<>();
+
+    public InMemoryTaskManager() {
+        this.inMemoryHistoryManager = new InMemoryHistoryManager();
+    }
 
     @Override
     public Task getTasks(long id){//Метод возвращает задачу по идентификатору
@@ -67,22 +72,19 @@ public class InMemoryTaskManager implements TaskManager{
 
     private Task getTusk(long id) {
         Task task = (Task) tasks.get(id);
-        checkSizeOfHistoryListByTen();
-        historyList.add(task);
+        inMemoryHistoryManager.add(task);
         return task;
     }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
 
     private SubTask getSubTusk(long id) {
         SubTask sT = (SubTask) subTasks.get(id);
-        checkSizeOfHistoryListByTen();
-        historyList.add(sT);
+        inMemoryHistoryManager.add(sT);
         return sT;
     }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
 
     private Epic getEpic(long id) {
         Epic e = (Epic) epic.get(id);
-        checkSizeOfHistoryListByTen();
-        historyList.add(e);
+        inMemoryHistoryManager.add(e);
         return e;
     }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
 

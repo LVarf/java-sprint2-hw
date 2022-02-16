@@ -16,7 +16,7 @@ public class InMemoryHistoryManager implements HistoryManager{
 
     @Override
     public List<Task> getHistory() {
-        return null;
+        return historyList;
     }
 
     @Override
@@ -24,6 +24,6 @@ public class InMemoryHistoryManager implements HistoryManager{
         if (historyList.size() >= SIZE_OF_HISTORY_LIST) {
             historyList.remove(0);
         }
-
+        historyList.add(task);
     }
 }
