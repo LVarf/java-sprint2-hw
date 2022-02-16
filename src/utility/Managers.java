@@ -2,8 +2,8 @@ package utility;
 
 import utilityTasks.InMemoryTaskManager;
 import utilityTasks.TaskManager;
-import utitlityHistory.HistoryManager;
-import utitlityHistory.InMemoryHistoryManager;
+import utitlityHistories.HistoryManager;
+import utitlityHistories.InMemoryHistoryManager;
 
 public final class Managers {
     public static TaskManager getTaskManager() {

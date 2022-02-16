@@ -1,6 +1,7 @@
 package main;
 
 import tasks.*;
+import utility.Managers;
 import utilityTasks.Status;
 import utilityTasks.TaskManager;
 
@@ -9,7 +10,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        //start(Managers.getTaskManager()); //раскомментировать для проверки работы программы
+        start(Managers.getTaskManager()); //раскомментировать для проверки работы программы
     }
     public static void start(TaskManager taskManager) {
         Scanner scanner = new Scanner(System.in);
@@ -71,7 +72,7 @@ public class Main {
     static void changeStatusOfTask(TaskManager taskManager) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите номер задачи или подзадачи");
-        Object o = taskManager.getTasks(scanner.nextInt());
+        Task o = taskManager.getTasks(scanner.nextInt());
         if ((o.getClass() != (new SubTask()).getClass()) && (o.getClass() != (new Epic()).getClass())){
             Task task = (Task) o;
             System.out.println("Теперь задача: 1 - новая, 2 - в процессе, 3 - выполнена");

@@ -3,7 +3,7 @@ package utilityTasks;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import utitlityHistory.HistoryManager;
+import utitlityHistories.HistoryManager;
 import utility.Managers;
 
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ import java.util.List;
 public class InMemoryTaskManager implements TaskManager{
 
     private long index = 0;
-    private HashMap<Long, Task> tasks = new HashMap<>();
-    private HashMap<Long, Task> epic = new HashMap<>();
-    private HashMap<Long, Task> subTasks = new HashMap<>();
+    private final HashMap<Long, Task> tasks = new HashMap<>();
+    private final HashMap<Long, Task> epic = new HashMap<>();
+    private final HashMap<Long, Task> subTasks = new HashMap<>();
     private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
@@ -25,11 +25,11 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public Task getTasks(long id){//Метод возвращает задачу по идентификатору
         if (!(tasks.isEmpty()) && tasks.containsKey(id)){
-            return getTusk(id);
+            return getTask(id);
         } else if (!(epic.isEmpty()) && epic.containsKey(id)) {
             return getEpic(id);
         } else if (!(subTasks.isEmpty()) && subTasks.containsKey(id)) {
-            return getEpic(id);
+            return getSubTusk(id);
         } else return null;
     }//Метод возвращает задачу по идентификатору
 
@@ -47,12 +47,12 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public ArrayList<Task> returnAllTasks(){//Вывод всех задач
         ArrayList<Task> ls = new ArrayList<>();
-        for (long i = 1; i < index; i++){
+        for (long i = 1; i < index + 1; i++) {
             if (!(tasks.isEmpty()) && tasks.containsKey(i)) {
-                ls.add(getTusk(i));
-            } else if(!(epic.isEmpty()) && epic.containsKey(i)){
+                ls.add(getTask(i));
+            } else if (!(epic.isEmpty()) && epic.containsKey(i)) {
                 ls.add(getEpic(i));
-            } else if(!(subTasks.isEmpty()) && subTasks.containsKey(i)) {
+            } else if (!(subTasks.isEmpty()) && subTasks.containsKey(i)) {
                 ls.add(getSubTusk(i));
             }
         }
@@ -64,8 +64,8 @@ public class InMemoryTaskManager implements TaskManager{
         return inMemoryHistoryManager.getHistory();
     }//Метод возвращает список истории
 
-    private Task getTusk(long id) {
-        Task task = (Task) tasks.get(id);
+    private Task getTask(long id) {
+        Task task = tasks.get(id);
         inMemoryHistoryManager.add(task);
         return task;
     }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
@@ -139,8 +139,7 @@ public class InMemoryTaskManager implements TaskManager{
     }//ВСПОМОГАТЕЛЬНЫЙ метод актуализирует поле-статаус эпика на основе подзадач
 
     @Override
-    public void addNewSubTask(SubTask obj){//Добавление новой подзадачи
-        SubTask sT = (SubTask) obj;
+    public void addNewSubTask(SubTask sT){//Добавление новой подзадачи
         Epic e = (Epic) epic.get(sT.getEpicId());//вернуть epic по id из subTask
         sT.setId(generateId());//присвоить subTask свой id
         subTasks.put(index, sT);//записать subTask в свою таблицу
@@ -149,15 +148,13 @@ public class InMemoryTaskManager implements TaskManager{
     }//Добавление новой подзадачи
 
     @Override
-    public void addNewTask(Task obj){//Добавление новой задачи
-        Task o = (Task) obj;
+    public void addNewTask(Task o){//Добавление новой задачи
         o.setId(generateId());
         tasks.put(index, o);
     }//Добавление новой задачи
 
     @Override
-    public void addNewEpic(Epic obj){//Добавление нового эпика
-        Epic o = (Epic) obj;
+    public void addNewEpic(Epic o){//Добавление нового эпика
         o.setId(generateId());
         epic.put(index, o);
     }//Добавление нового эпика
