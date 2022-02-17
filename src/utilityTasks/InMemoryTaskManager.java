@@ -113,7 +113,7 @@ public class InMemoryTaskManager implements TaskManager{
         subTasks.clear();
     }//Удаление всех задач
 
-    public void updateEpicStatus(Epic o){//метод актуализирует поле-статаус эпика на основе подзадач
+    private void updateEpicStatus(Epic o){//метод актуализирует поле-статаус эпика на основе подзадач
 
         boolean checkStatus = false;//дополнительная переменная для определения статуса эпика
         for (Long i: o.getListSubTask()){
