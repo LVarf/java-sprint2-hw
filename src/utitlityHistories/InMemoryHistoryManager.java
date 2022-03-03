@@ -31,4 +31,14 @@ public class InMemoryHistoryManager implements HistoryManager{
         }
         historyList.add(task);
     }
+    class MyLinkedList {
+        public void linkLast() {
+
+        }
+
+        public void getTask() {
+
+        }
+    }
+
 }
