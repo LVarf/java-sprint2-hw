@@ -9,5 +9,5 @@ public interface HistoryManager {
 
     public void add(Task task);
 
-    public void remove(int id);
+    public boolean remove(long id);
 }

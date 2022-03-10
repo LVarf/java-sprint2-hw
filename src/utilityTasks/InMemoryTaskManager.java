@@ -23,7 +23,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public Task getTasks(long id){//Метод возвращает задачу по идентификатору
+    public Task getTasks(long id){//Метод возвращает задачу по id
         if (!(tasks.isEmpty()) && tasks.containsKey(id)){
             return getTask(id);
         } else if (!(epic.isEmpty()) && epic.containsKey(id)) {
@@ -68,19 +68,19 @@ public class InMemoryTaskManager implements TaskManager{
         Task task = tasks.get(id);
         inMemoryHistoryManager.add(task);
         return task;
-    }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
+    }//Метод возвращает объект по id
 
     private SubTask getSubTusk(long id) {
         SubTask sT = (SubTask) subTasks.get(id);
         inMemoryHistoryManager.add(sT);
         return sT;
-    }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
+    }//Метод возвращает объект по id
 
     private Epic getEpic(long id) {
         Epic e = (Epic) epic.get(id);
         inMemoryHistoryManager.add(e);
         return e;
-    }//Метод возвращает объект по id, проверяет размер списка истории и добавляет историю
+    }//Метод возвращает объект по id
 
     @Override
     public void updateTasks(Task o){//Метод для обновления задачи

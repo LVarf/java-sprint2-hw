@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        //start(Managers.getTaskManager()); //раскомментировать для проверки работы программы
+        start(Managers.getTaskManager()); //раскомментировать для проверки работы программы
     }
 
     public static void start(TaskManager taskManager) {
@@ -34,6 +34,9 @@ public class Main {
                 case 5:
                     writeHistory(taskManager);
                     break;
+                case 6:
+                    writeOnceTask(taskManager);
+                    break;
                 case 0:
                     System.out.println("Программа успещно завершила работу");
                     System.exit(0);
@@ -44,11 +47,18 @@ public class Main {
         }
     }
 
+    static void writeOnceTask(TaskManager taskManager){
+        System.out.println("Введите номер задачи");
+        Task task;
+        task = taskManager.getTasks((new Scanner(System.in)).nextInt());
+        System.out.println("Задача " + task.getId() + " " + task.getName());
+    }
+
     static void writeHistory(TaskManager taskManager) {
         for (Task task: taskManager.history()) {
             System.out.println("Задача " + task.getId() + " " + task.getName());
         }
-    }
+    }//История запросов
 
     static void print() {
         System.out.println("Что вы хотите сделать?");
@@ -57,6 +67,7 @@ public class Main {
         System.out.println("3 - Поменять статус задачи");
         System.out.println("4 - Удалить задачу по номеру");
         System.out.println("5 - Показать историю запросов");
+        System.out.println("6 - Вывести задачу по id");
         System.out.println("0 - Завершить программу");
     }//Контекстное меню
 
@@ -68,7 +79,7 @@ public class Main {
         taskManager.removeTask(i);
         System.out.println("Задача " + i + " удалена");
 
-    }
+    }//Удаляет задачу по id
 
     static void changeStatusOfTask(TaskManager taskManager) {
         Scanner scanner = new Scanner(System.in);
@@ -109,7 +120,7 @@ public class Main {
                 }
             taskManager.updateTasks(sT);
         } else System.out.println("Нет задачи / подзадачи с таким номером");
-    }
+    }//Изменяет статус задачи
 
     static void createNewTask(TaskManager taskManager){
         System.out.println("Что вы хотите создать?");
@@ -148,7 +159,7 @@ public class Main {
                 System.out.println("Такой команды не предусмотрено");
                 break;
         }
-    }//Создание нового объекта
+    }//Создание новой задачи
 
     static void writeAllTasks(TaskManager taskManager){
         for(Task task: taskManager.returnAllTasks()){

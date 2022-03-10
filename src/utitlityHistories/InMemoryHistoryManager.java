@@ -2,42 +2,88 @@ package utitlityHistories;
 
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager{
+    Map<Long, Node> nodeMap;
 
-    private final List<Task> historyList;
-    private static final int SIZE_OF_HISTORY_LIST = 10;
+    Node<Task> head;
+    Node<Task> tail;
+    int size = 0;
+
+    private HistoryLinkedList<Task> historyList;
 
     public InMemoryHistoryManager() {
-        historyList = new ArrayList<>();
+        historyList = new HistoryLinkedList<>();
+        nodeMap = new HashMap<>();
     }
 
     @Override
     public List<Task> getHistory() {
-        return historyList;
+        return historyList.getTask(historyList);
     }
 
-    @Override
-    public void remove(int id) {
 
+    @Override
+    public boolean remove(long id) {
+        if (nodeMap.containsKey(id)) {
+            historyList.remove(nodeMap.get(id).item);
+            removeNode(nodeMap.get(id));
+            nodeMap.remove(id);
+            return true;
+        }
+
+            return false;
     }
 
     @Override
     public void add(Task task) {
-        if (historyList.size() >= SIZE_OF_HISTORY_LIST) {
-            historyList.remove(0);
-        }
-        historyList.add(task);
+        remove(task.getId());
+        historyList.addLast(task);
+        nodeMap.put(task.getId(), addTail(task));
     }
-    class MyLinkedList {
-        public void linkLast() {
 
+    Node addTail(Task task) {
+        Node oldTail = tail;
+        tail = new Node(oldTail, task, null);
+
+        if (oldTail != null) {
+            oldTail.next = tail;
+        } else
+            head = tail;
+        size++;
+        return tail;
+    }
+
+    boolean removeNode(Node node) {
+        if (head == null)
+            return false;
+        if (head.next == null) {
+            head = null;
+            tail = null;
+            size--;
+            return true;
         }
+        if (node.prev != null)
+            node.prev.next = node.next;
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+        node.item = null;
+        size--;
+        return true;
+    }
 
-        public void getTask() {
 
+    private class Node<E extends Task> {
+        E item;
+        Node<E> next;
+        Node<E> prev;
+
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
         }
     }
 
