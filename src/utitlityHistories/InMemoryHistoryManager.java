@@ -5,7 +5,7 @@ import tasks.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager{
-    Map<Long, Node> nodeMap;
+    private Map<Long, Node> nodeMap;
 
     Node<Task> head;
     Node<Task> tail;
@@ -23,6 +23,9 @@ public class InMemoryHistoryManager implements HistoryManager{
         return historyList.getTask(historyList);
     }
 
+    public Map<Long, Node> getNodeMap(){
+        return nodeMap;
+    }
 
     @Override
     public boolean remove(long id) {

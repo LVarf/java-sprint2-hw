@@ -5,6 +5,7 @@ import tasks.SubTask;
 import tasks.Task;
 import utitlityHistories.HistoryManager;
 import utility.Managers;
+import utitlityHistories.InMemoryHistoryManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,11 +36,28 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public void removeTask(Long i){//Удаляет задачу по идентификатору
+        InMemoryHistoryManager memory = (InMemoryHistoryManager) inMemoryHistoryManager;
         if (!(tasks.isEmpty()) && tasks.containsKey(i)){
             tasks.remove(i);
+            if(memory.getNodeMap().containsKey(i))
+            inMemoryHistoryManager.remove(i);
+
         } else if (!(epic.isEmpty()) && epic.containsKey(i)){
+            Epic eT = (Epic) epic.get(i);
+            if (!eT.getListSubTask().isEmpty()) {
+                for (Long sT: eT.getListSubTask()){
+                    if(memory.getNodeMap().containsKey(sT))
+                        inMemoryHistoryManager.remove(sT);
+                    subTasks.remove(sT);
+                }
+            }
+            if(memory.getNodeMap().containsKey(i))
+                inMemoryHistoryManager.remove(i);
             epic.remove(i);
+
         } else if (!(subTasks.isEmpty()) && subTasks.containsKey(i)){
+            if(memory.getNodeMap().containsKey(i))
+                inMemoryHistoryManager.remove(i);
             subTasks.remove(i);
         }
     }//Удаляет задачу по идентификатору
@@ -108,9 +126,24 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public void removeAllTasks(){//Удаление всех задач
-        tasks.clear();
-        epic.clear();
-        subTasks.clear();
+        InMemoryHistoryManager memory = (InMemoryHistoryManager) inMemoryHistoryManager;
+        for (Task ts: tasks.values()){
+            if(memory.getNodeMap().containsKey(ts.getId()))
+                inMemoryHistoryManager.remove(ts.getId());
+            tasks.remove(ts);
+        }
+
+        for (Task ts: epic.values()){
+            if(memory.getNodeMap().containsKey(ts.getId()))
+                inMemoryHistoryManager.remove(ts.getId());
+            epic.remove(ts);
+        }
+
+        for (Task ts: subTasks.values()) {
+            if (memory.getNodeMap().containsKey(ts.getId()))
+                inMemoryHistoryManager.remove(ts.getId());
+            subTasks.remove(ts);
+        }
     }//Удаление всех задач
 
     private void updateEpicStatus(Epic o){//метод актуализирует поле-статаус эпика на основе подзадач
