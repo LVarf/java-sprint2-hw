@@ -46,7 +46,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         nodeMap.put(task.getId(), addTail(task));
     }
 
-    Node addTail(Task task) {
+    private Node addTail(Task task) {
         Node oldTail = tail;
         tail = new Node(oldTail, task, null);
 
@@ -58,7 +58,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         return tail;
     }
 
-    boolean removeNode(Node node) {
+    private boolean removeNode(Node node) {
         if (head == null)
             return false;
         if (head.next == null) {
