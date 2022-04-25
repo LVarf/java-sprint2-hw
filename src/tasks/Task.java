@@ -1,6 +1,7 @@
 package tasks;
 
 import utilityTasks.Status;
+import utilityTasks.TaskTypes;
 
 import java.util.Objects;
 
@@ -9,9 +10,25 @@ public class Task {
     private String description; //описание задачи
     private Status status; //статус задачи
     private Long id;//id задачи
+    protected TaskTypes taskTypes;
+
 
     public Task() {
         this.status = Status.NEW;
+        this.taskTypes = TaskTypes.TASK;
+    }
+
+    public TaskTypes getTaskTypes() {
+        return this.taskTypes;
+    }
+
+    public void setTaskTypes(TaskTypes taskTypes) {
+        if(taskTypes.equals(TaskTypes.TASK))
+            this.taskTypes = TaskTypes.TASK;
+        if(taskTypes.equals(TaskTypes.EPIC))
+            this.taskTypes = TaskTypes.EPIC;
+        if(taskTypes.equals(TaskTypes.SUBTASK))
+            this.taskTypes = TaskTypes.SUBTASK;
     }
 
     public Status getStatus() {

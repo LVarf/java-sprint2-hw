@@ -25,7 +25,7 @@ public interface TaskManager {
 
         public void addNewEpic(Epic obj);//Добавление нового эпикаэкземпляра
 
-        public List<Task> history();
+        public List<Task>  history();
 
 
 }

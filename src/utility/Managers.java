@@ -1,18 +1,25 @@
 package utility;
 
+import utilityTasks.FileBackendTaskManager;
 import utilityTasks.InMemoryTaskManager;
 import utilityTasks.TaskManager;
 import utitlityHistories.HistoryManager;
 import utitlityHistories.InMemoryHistoryManager;
 
+import java.io.File;
+
 public final class Managers {
     public static TaskManager getTaskManager() {
-        TaskManager taskManager = new InMemoryTaskManager();
-        return taskManager;
+        return new InMemoryTaskManager();
+    }
+
+    public static FileBackendTaskManager getFileBackendTaskManager() {
+        File file = new File("tasks.csv");
+        return FileBackendTaskManager.loadFromFile(file);
     }
 
     public static HistoryManager getHistoryManager() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
-        return historyManager;
+        return new InMemoryHistoryManager();
     }
+
 }

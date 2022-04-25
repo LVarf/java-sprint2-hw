@@ -13,10 +13,10 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager{
 
-    private long index = 0;
-    private final HashMap<Long, Task> tasks = new HashMap<>();
-    private final HashMap<Long, Task> epic = new HashMap<>();
-    private final HashMap<Long, Task> subTasks = new HashMap<>();
+    protected long index = 0;
+    protected final HashMap<Long, Task> tasks = new HashMap<>();
+    protected final HashMap<Long, Task> epics = new HashMap<>();
+    protected final HashMap<Long, Task> subTasks = new HashMap<>();
     private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
@@ -27,7 +27,7 @@ public class InMemoryTaskManager implements TaskManager{
     public Task getTasks(long id){//Метод возвращает задачу по id
         if (!(tasks.isEmpty()) && tasks.containsKey(id)){
             return getTask(id);
-        } else if (!(epic.isEmpty()) && epic.containsKey(id)) {
+        } else if (!(epics.isEmpty()) && epics.containsKey(id)) {
             return getEpic(id);
         } else if (!(subTasks.isEmpty()) && subTasks.containsKey(id)) {
             return getSubTusk(id);
@@ -42,8 +42,8 @@ public class InMemoryTaskManager implements TaskManager{
             if(memory.getNodeMap().containsKey(i))
             inMemoryHistoryManager.remove(i);
 
-        } else if (!(epic.isEmpty()) && epic.containsKey(i)){
-            Epic eT = (Epic) epic.get(i);
+        } else if (!(epics.isEmpty()) && epics.containsKey(i)){
+            Epic eT = (Epic) epics.get(i);
             if (!eT.getListSubTask().isEmpty()) {
                 for (Long sT: eT.getListSubTask()){
                     if(memory.getNodeMap().containsKey(sT))
@@ -53,7 +53,7 @@ public class InMemoryTaskManager implements TaskManager{
             }
             if(memory.getNodeMap().containsKey(i))
                 inMemoryHistoryManager.remove(i);
-            epic.remove(i);
+            epics.remove(i);
 
         } else if (!(subTasks.isEmpty()) && subTasks.containsKey(i)){
             if(memory.getNodeMap().containsKey(i))
@@ -68,7 +68,7 @@ public class InMemoryTaskManager implements TaskManager{
         for (long i = 1; i < index + 1; i++) {
             if (!(tasks.isEmpty()) && tasks.containsKey(i)) {
                 ls.add(getTask(i));
-            } else if (!(epic.isEmpty()) && epic.containsKey(i)) {
+            } else if (!(epics.isEmpty()) && epics.containsKey(i)) {
                 ls.add(getEpic(i));
             } else if (!(subTasks.isEmpty()) && subTasks.containsKey(i)) {
                 ls.add(getSubTusk(i));
@@ -95,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager{
     }//Метод возвращает объект по id
 
     private Epic getEpic(long id) {
-        Epic e = (Epic) epic.get(id);
+        Epic e = (Epic) epics.get(id);
         inMemoryHistoryManager.add(e);
         return e;
     }//Метод возвращает объект по id
@@ -106,21 +106,21 @@ public class InMemoryTaskManager implements TaskManager{
         if (!(tasks.isEmpty()) && tasks.containsKey(id)) {
             tasks.remove(id);
             tasks.put(id, o);
-        } else if(!(epic.isEmpty()) && epic.containsKey(id)){
+        } else if(!(epics.isEmpty()) && epics.containsKey(id)){
             Epic obj = (Epic) o;
             if (obj.getListSubTask().size() == 0 ){
-                epic.remove(id);
-                epic.put(id, o);
+                epics.remove(id);
+                epics.put(id, o);
             } else {
                 updateEpicStatus(obj);
-                epic.remove(id);
-                epic.put(id, o);
+                epics.remove(id);
+                epics.put(id, o);
             }
         } else if(!(subTasks.isEmpty()) && subTasks.containsKey(id)) {
             SubTask obj = (SubTask) o;
             subTasks.remove(id);
             subTasks.put(id, obj);
-            updateEpicStatus((Epic) epic.get(obj.getEpicId()));
+            updateEpicStatus((Epic) epics.get(obj.getEpicId()));
         }
     }//Метод для обновления задачи
 
@@ -133,10 +133,10 @@ public class InMemoryTaskManager implements TaskManager{
             tasks.remove(ts);
         }
 
-        for (Task ts: epic.values()){
+        for (Task ts: epics.values()){
             if(memory.getNodeMap().containsKey(ts.getId()))
                 inMemoryHistoryManager.remove(ts.getId());
-            epic.remove(ts);
+            epics.remove(ts);
         }
 
         for (Task ts: subTasks.values()) {
@@ -173,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager{
 
     @Override
     public void addNewSubTask(SubTask sT){//Добавление новой подзадачи
-        Epic e = (Epic) epic.get(sT.getEpicId());//вернуть epic по id из subTask
+        Epic e = (Epic) epics.get(sT.getEpicId());//вернуть epic по id из subTask
         sT.setId(generateId());//присвоить subTask свой id
         subTasks.put(index, sT);//записать subTask в свою таблицу
         e.getListSubTask().add(sT.getId());//добавить id subTask в поле-список эпика
@@ -189,11 +189,14 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public void addNewEpic(Epic o){//Добавление нового эпика
         o.setId(generateId());
-        epic.put(index, o);
+        epics.put(index, o);
     }//Добавление нового эпика
 
     private long generateId() {
         return ++index;
     }
 
+    public void setIndex(long index) {
+        this.index = index;
+    }
 }

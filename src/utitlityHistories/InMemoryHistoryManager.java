@@ -5,13 +5,13 @@ import tasks.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager{
-    private Map<Long, Node> nodeMap;
+    protected Map<Long, Node> nodeMap;
 
     Node<Task> head;
     Node<Task> tail;
     int size = 0;
 
-    private HistoryLinkedList<Task> historyList;
+    protected HistoryLinkedList<Task> historyList;
 
     public InMemoryHistoryManager() {
         historyList = new HistoryLinkedList<>();
@@ -21,6 +21,10 @@ public class InMemoryHistoryManager implements HistoryManager{
     @Override
     public List<Task> getHistory() {
         return historyList.getTask(historyList);
+    }
+
+    public HistoryLinkedList<Task> getHistoryList() {
+        return historyList;
     }
 
     public Map<Long, Node> getNodeMap(){
@@ -37,6 +41,10 @@ public class InMemoryHistoryManager implements HistoryManager{
         }
 
             return false;
+    }
+
+    public void setHistoryList(HistoryLinkedList<Task> historyList) {
+        this.historyList = historyList;
     }
 
     @Override

@@ -1,7 +1,14 @@
 package tasks;
 
+import utilityTasks.TaskTypes;
+
 public class SubTask extends Task {
     private Long epicId;//id эпика, к которому относится объект
+
+    public SubTask() {
+        super();
+        this.taskTypes = TaskTypes.SUBTASK;
+    }
 
     public Long getEpicId() {
         return epicId;

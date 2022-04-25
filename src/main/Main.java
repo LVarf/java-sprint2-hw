@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        start(Managers.getTaskManager()); //раскомментировать для проверки работы программы
+        start(Managers.getFileBackendTaskManager()); //раскомментировать для проверки работы программы
     }
 
     public static void start(TaskManager taskManager) {
