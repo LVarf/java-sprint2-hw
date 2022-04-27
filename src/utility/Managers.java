@@ -1,10 +1,10 @@
 package utility;
 
-import utilityTasks.FileBackendTaskManager;
-import utilityTasks.InMemoryTaskManager;
-import utilityTasks.TaskManager;
-import utitlityHistories.HistoryManager;
-import utitlityHistories.InMemoryHistoryManager;
+import taskManager.FileBackendTaskManager;
+import taskManager.InMemoryTaskManager;
+import taskManager.TaskManager;
+import historyManager.HistoryManager;
+import historyManager.InMemoryHistoryManager;
 
 import java.io.File;
 

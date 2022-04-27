@@ -1,7 +1,7 @@
 package tasks;
 
-import utilityTasks.Status;
-import utilityTasks.TaskTypes;
+import enums.Status;
+import enums.TaskTypes;
 
 import java.util.Objects;
 
@@ -68,7 +68,8 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(name, task.name) && Objects.equals(description, task.description);
+        return Objects.equals(name, task.name) && Objects.equals(description, task.description)
+                && Objects.equals(taskTypes, task.taskTypes) && Objects.equals(status, task.status);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class Task {
         }
         return hash;
     }
+
 
     @Override
     public String toString() {

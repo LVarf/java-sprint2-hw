@@ -2,8 +2,8 @@ package main;
 
 import tasks.*;
 import utility.Managers;
-import utilityTasks.Status;
-import utilityTasks.TaskManager;
+import enums.Status;
+import taskManager.TaskManager;
 
 import java.util.Scanner;
 

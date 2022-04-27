@@ -1,11 +1,12 @@
-package utilityTasks;
+package taskManager;
 
+import enums.Status;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import utitlityHistories.HistoryManager;
+import historyManager.HistoryManager;
 import utility.Managers;
-import utitlityHistories.InMemoryHistoryManager;
+import historyManager.InMemoryHistoryManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager{
                         inMemoryHistoryManager.remove(sT);
                     subTasks.remove(sT);
                 }
-            }
+            } else
             if(memory.getNodeMap().containsKey(i))
                 inMemoryHistoryManager.remove(i);
             epics.remove(i);

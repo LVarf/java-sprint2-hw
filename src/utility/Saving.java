@@ -4,13 +4,14 @@ import taskException.ManagerSaveException;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import utilityTasks.Status;
-import utilityTasks.TaskTypes;
-import utitlityHistories.HistoryManager;
+import enums.Status;
+import enums.TaskTypes;
+import historyManager.HistoryManager;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,46 +22,27 @@ public final class Saving {
         String[] strFileArray = Files.readString(tasksFile.toPath()).split("\n");
 
         try (BufferedWriter bw = new BufferedWriter (new FileWriter(tasksFile))) {
-            for (String s : strFileArray) {
-                System.out.println(s);
-            }
+            List<String> list = new ArrayList<>(List.of(strFileArray));
 
-            if (strFileArray.length > 1) {
-                if(!strFileArray[strFileArray.length - 2].isBlank()) {
-                    for (int i = 0; i < strFileArray.length; i++) {
-                        if (!strFileArray[i].isBlank())
-                            bw
-                                    .append(strFileArray[i])
-                                    .append("\n");
+            if (list.size() > 1) {
+                if (list.get(list.size() - 2).isBlank()) {//There is a history
+                    list.set(list.size() - 2, str + "\n");
+                    for (String st : list) {
+                        bw.append(st + "\n");
                     }
-                    bw
-                            .append(str)
-                            .append("\n\n");
-                } else
-                if (strFileArray[strFileArray.length - 2].isBlank()) {
-                    for (int i = 0; i < strFileArray.length - 1; i++) {
-
-                        if (!strFileArray[i].isBlank())
-                            bw
-                                    .append(strFileArray[i])
-                                    .append("\n");
+                } else {
+                    list.add(str);
+                    for (String st : list) {
+                        bw.append(st + "\n");
                     }
-                    bw
-                            .append(str)
-                            .append("\n\n");
-                    bw
-                            .append(strFileArray[strFileArray.length - 1]);
                 }
-            } else if (strFileArray.length == 1) {
-                bw
-                        .write(strFileArray[0]);
-                bw
-                        .append('\n')
-                        .append(str)
-                        .append("\n\n");
-            } else {
-                System.out.println("Ты, глупышь, где-то накосячил");
+            } else if (list.size() == 1) {
+                list.add(str);
+                for (String st : list) {
+                    bw.append(st + "\n");
+                }
             }
+
         }
     }
 
@@ -73,50 +55,27 @@ public final class Saving {
         }
 
         try (BufferedWriter bw = new BufferedWriter (new FileWriter(file))) {
+            List<String> list = new ArrayList<>(List.of(strFileArray));
 
-            if (strFileArray[strFileArray.length - 2].isEmpty()) {
-                for (int i = 0; i < strFileArray.length - 2; i++) {
-                    String[] newArray = strFileArray[i].split(",");
-                    if (newArray[0].equals(id.toString())) {
-                        newArray[3] = status.toString();
-                        bw
-                                .append(
-                                        String.join(",", newArray)
-                                )
-                                .append("\n");
-                    } else {
-                        bw
-                                .append(strFileArray[i])
-                                .append("\n");
-                    }
-                }
-                bw
-                        .append("\n");
+            for (String st: list) {
+                String[] newArray = st.split(",");
+                if (newArray[0].equals(id.toString())) {
+                    newArray[3] = status.toString();
                     bw
-                            .append(strFileArray[strFileArray.length - 1]);
-            } else {
-                for (int i = 0; i < strFileArray.length; i++) {
-                    String[] newArray = strFileArray[i].split("1");
-                    if (newArray[0].equals(id.toString())) {
-                        newArray[3] = status.toString();
-                        bw
-                                .append(
-                                        String.join(",", newArray)
-                                )
-                                .append("\n");
-                    } else {
-                        bw
-                                .append(strFileArray[i])
-                                .append("\n");
-                    }
+                            .append(
+                                    String.join(",", newArray)
+                            )
+                            .append("\n");
+                } else {
+                    bw
+                            .append(st)
+                            .append("\n");
                 }
-                bw
-                        .append("\n");
             }
         } catch (FileNotFoundException e) {
-            throw new ManagerSaveException();
+            e.toString();
         } catch (IOException e) {
-            throw new ManagerSaveException();
+            e.toString();
         }
     }
 
@@ -128,13 +87,16 @@ public final class Saving {
             throw new ManagerSaveException();
         }
         try (BufferedWriter bw = new BufferedWriter (new FileWriter(file))) {
-            if(strFileArray.length > 1) {
-                bw.append(strFileArray[0] + "\n");//rewrite first line
+            List<String> list = new ArrayList<>(List.of(strFileArray));
 
-                if (strFileArray[strFileArray.length - 2].isEmpty()) {
+            if(list.size() > 1) {
+                bw.append(list.get(0) + "\n");//rewrite first line
+                list.remove(0);
+
+                if (list.get(list.size() - 2).isBlank()) {
                     long j = -1;
-                    for (int i = 1; i < strFileArray.length - 2; i++) {
-                        String[] newArray = strFileArray[i].split(",");
+                    for (int i = 0; i < list.size() - 2; i++) {
+                        String[] newArray = list.get(i).split(",");
                         try {
                             j = Long.parseLong(newArray[0]);
                         } catch (IllegalStateException e) {
@@ -142,49 +104,48 @@ public final class Saving {
                         }
                         if (j != id && j != -1) {
                             bw
-                                    .append(strFileArray[i])
-                                    .append("\n");
+                                    .append(list.get(i) + "\n");
                         }
-                        if (i == strFileArray.length - 3)
+                        if (i == list.size() - 3)
                             bw
                                     .append("\n");
                     }
 
-                    List<Long> listHistory = Stream.of(strFileArray[strFileArray.length - 1].split(","))
-                            .map(Long::parseLong).collect(Collectors.toList());//Might a queue is broke
+                    if (!list.get(list.size() - 1).isEmpty()) {
+                        List<Long> listHistory = Stream.of(list.get(list.size() - 1).split(","))
+                                .map(Long::parseLong).collect(Collectors.toList());//Might a queue is broke
 
-                    StringBuilder sB = new StringBuilder();//There no "," like last symbol
+                        StringBuilder sB = new StringBuilder();//There no "," like last symbol
 
-                    for (Long l: listHistory) {
-                        if (l != id) {
-                            if (sB.length() == 0) {
-                                sB.append(l);
-                            } else {
-                                sB.append("," + l);
+                        for (Long l : listHistory) {
+                            if (l != id) {
+                                if (sB.length() == 0) {
+                                    sB.append(l);
+                                } else {
+                                    sB.append("," + l);
+                                }
                             }
                         }
-                    }
 
-                    bw
-                            .append(sB.toString());
+                        bw
+                                .append(sB.toString());
+                    }
 
                 } else {
                     long j = -1;
-                    for (int i = 1; i < strFileArray.length; i++) {
-                        String[] newArray = strFileArray[i].split(",");
+                    for (String st: list) {
+                        String[] newArray = st.split(",");
                         try {
                             j = Long.parseLong(newArray[0]);
                         } catch (IllegalStateException e) {
                             continue;
                         }
-                        if (j != id && j != -1) {
-                            bw
-                                    .append(strFileArray[i])
-                                    .append("\n");
-                            if (i == strFileArray.length - 3)
-                                bw
-                                        .append("\n");
+                        if (j == id) {
+                            list.remove(j);
                         }
+                    }
+                    for (String st : list) {
+                        bw.append(st);
                     }
                 }
             } else throw new ManagerSaveException();
@@ -205,40 +166,30 @@ public final class Saving {
         }
 
         try (BufferedWriter bw = new BufferedWriter (new FileWriter(tasksFile))) {
+            List<String> list = new ArrayList<>(List.of(strFileArray));
 
-            String strFile = "";
-            if(strFileArray.length>1) {
-                if(!strFileArray[strFileArray.length-2].isBlank())
-                    for (int i = 0; i < strFileArray.length; i++) {
-                        strFile += strFileArray[i] + "\n";
+            if(list.size() > 1) {
+                if (!list.get(list.size() - 2).isBlank()) {
+                    list.add("\n" + task.getId());
+                    for (String st : list) {
+                        bw.append(st + "\n");
                     }
-                else for (int i = 0; i < strFileArray.length - 2; i++) {
-                    strFile += strFileArray[i] + "\n";
-                }
-                strFile += "\n";
-            }
-
-            if(strFileArray.length > 1 && strFileArray[strFileArray.length-2].isBlank()) {
-                List<Long> strOldHistoryList = new ArrayList<>();
-                String strOldHistory = strFileArray[strFileArray.length - 1];
-                for (String taskIdStr : strOldHistory.split(",")) {
-                    strOldHistoryList.add(Long.parseLong(taskIdStr));
-                }
-
-                for (Long taskId : strOldHistoryList) {
-                    if (taskId != task.getId()) {
-                        strFile += taskId + ",";
+                } else {
+                    List<Long> longs = Arrays.stream(list.get(list.size() - 1).split(","))
+                            .map(Long::parseLong).collect(Collectors.toList());
+                    longs.remove(task.getId());
+                    longs.add(task.getId());
+                    list.remove(list.size() - 1);
+                    for (String st : list) {
+                        bw.append(st + "\n");
+                    }
+                    for (Long l : longs) {
+                        bw.append(l + ",");
                     }
                 }
             }
-            strFile += task.getId();
-
-            bw
-                    .append(strFile);
-
-            //При запросе истории делать проверку пустой файл или нет "Have no tasks"
         } catch (IOException e) {
-            System.out.println("IOException");
+            e.toString();
         }
      }
 
@@ -367,9 +318,9 @@ public final class Saving {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             i = br.lines().count();
         } catch (FileNotFoundException e) {
-            throw new ManagerSaveException();
+            e.toString();
         } catch (IOException e) {
-            throw new ManagerSaveException();
+            e.toString();
         }
         return i > 1;
     }

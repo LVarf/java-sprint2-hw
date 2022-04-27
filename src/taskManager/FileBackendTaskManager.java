@@ -1,12 +1,13 @@
-package utilityTasks;
+package taskManager;
 
+import enums.TaskTypes;
 import taskException.ManagerSaveException;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 import utility.Managers;
 import utility.Saving;
-import utitlityHistories.HistoryManager;
+import historyManager.HistoryManager;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -32,7 +33,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
         try {
             Saving.writeTaskInFile(tasksFile, Saving.toString(task));
         } catch (IOException ex) {
-            throw new ManagerSaveException();
+            ex.toString();
         }
     }
 
@@ -49,7 +50,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                 }
 
             } catch (IOException ex) {
-                throw new ManagerSaveException();
+                ex.toString();
             }
 
         else if (Saving.isThereAreTasksInFile(file)){
@@ -90,7 +91,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                         fileBackendTaskManager.historyManager.add(fileBackendTaskManager.subTasks.get(ls));
                 }
             } catch (IOException e) {
-                throw new ManagerSaveException();
+                e.toString();
             }
         }
 
@@ -106,14 +107,14 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
 
     @Override
     public void removeTask(Long id) {
-        Saving.removeTask(tasksFile, id);
         if(epics.containsKey(id)){//remove all subTasks included the epic
             Epic epic = (Epic) epics.get(id);
             List<Long> subID = epic.getListSubTask();
-            for (Long l : subID) {
-                Saving.removeTask(tasksFile, l);
+            for (Long sub : subID) {
+                Saving.removeTask(tasksFile, sub);
             }
         }
+        Saving.removeTask(tasksFile, id);
         super.removeTask(id);
     }
 

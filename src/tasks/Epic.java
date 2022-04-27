@@ -1,6 +1,6 @@
 package tasks;
 
-import utilityTasks.TaskTypes;
+import enums.TaskTypes;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -35,7 +35,7 @@ public class Epic extends Task {
     @Override
     public boolean equals(Object o) {
         Epic epic = (Epic) o;
-        return super.equals(o) && Objects.equals(listSubTask, epic.listSubTask);
+        return super.equals(epic) && Objects.equals(listSubTask, epic.listSubTask);
     }
 
     @Override
