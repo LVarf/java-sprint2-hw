@@ -22,8 +22,16 @@ public class SubTask extends Task {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         SubTask subTask = (SubTask) o;
-        return super.equals(subTask) && Objects.equals(epicId, subTask.epicId);
+        return epicId.equals(subTask.epicId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), epicId);
     }
 
     @Override
