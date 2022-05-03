@@ -1,8 +1,10 @@
 package main;
 
-import tasks.*;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
 import utility.Managers;
-import enums.Status;
+import main.enums.Status;
 import taskManager.TaskManager;
 
 import java.util.Scanner;
@@ -55,7 +57,7 @@ public class Main {
     }
 
     static void writeHistory(TaskManager taskManager) {
-        for (Task task: taskManager.history()) {
+        for (Task task: taskManager.getHistory()) {
             System.out.println("Задача " + task.getId() + " " + task.getName());
         }
     }//История запросов
@@ -85,8 +87,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите номер задачи или подзадачи");
         Task o = taskManager.getTasks(scanner.nextInt());
-        if ((o.getClass() != (new SubTask()).getClass()) && (o.getClass() != (new Epic()).getClass())){
-            Task task = (Task) o;
+        if ((o.getClass() != SubTask.class) && (o.getClass() != Epic.class)){
+            Task task = o;
             System.out.println("Теперь задача: 1 - новая, 2 - в процессе, 3 - выполнена");
             switch (scanner.nextInt()){
                 case 1:
@@ -102,7 +104,7 @@ public class Main {
                     System.out.println("Такой статус не предусмотрен");
             }
             taskManager.updateTasks(task);
-        } else if (o.getClass() != (new Epic()).getClass()) {
+        } else if (o.getClass() != Epic.class) {
             SubTask sT = (SubTask) o;
                 System.out.println("Теперь подзадача: 1 - новая, 2 - в процессе, 3 - выполнена");
                 switch (scanner.nextInt()){

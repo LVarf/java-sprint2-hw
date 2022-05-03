@@ -13,9 +13,11 @@ public interface TaskManager {
 
         public void removeTask(Long i);//Удаляет экземпляр по идентификатору
 
-        public void updateTasks(Task o);//Метод для обновления экземпляра
-
         public void removeAllTasks();//Удаление всех экземпляров
+
+        public List<Task> getHistory();
+
+        public void updateTasks(Task o);//Метод для обновления экземпляра
 
         public ArrayList<Task> returnAllTasks();//Вывод всех экземпляров
 
@@ -24,8 +26,6 @@ public interface TaskManager {
         public void addNewTask(Task obj);//Добавление нового экземпляра
 
         public void addNewEpic(Epic obj);//Добавление нового эпикаэкземпляра
-
-        public List<Task>  history();
 
 
 }

@@ -1,7 +1,7 @@
 package tasks;
 
-import enums.Status;
-import enums.TaskTypes;
+import main.enums.Status;
+import main.enums.TaskTypes;
 
 import java.util.Objects;
 
@@ -77,6 +77,9 @@ public class Task {
         int hash = 17;
         if (name != null) {
             hash += name.hashCode();
+        }
+        if (id != 0) {
+            hash += id*19;
         }
         hash *= 31;
 

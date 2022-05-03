@@ -23,10 +23,6 @@ public class InMemoryHistoryManager implements HistoryManager{
         return historyList.getTask(historyList);
     }
 
-    public HistoryLinkedList<Task> getHistoryList() {
-        return historyList;
-    }
-
     public Map<Long, Node> getNodeMap(){
         return nodeMap;
     }

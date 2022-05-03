@@ -1,6 +1,6 @@
 package tasks;
 
-import enums.TaskTypes;
+import main.enums.TaskTypes;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -12,10 +12,6 @@ public class Epic extends Task {
         super();
         this.taskTypes = TaskTypes.EPIC;
         this.listSubTask = new ArrayList<>();
-    }
-
-    public void setListSubTask(ArrayList<Long> listSubTask) {
-        this.listSubTask = listSubTask;
     }
 
     public ArrayList<Long> getListSubTask() {

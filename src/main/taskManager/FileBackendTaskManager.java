@@ -1,7 +1,7 @@
 package taskManager;
 
-import enums.Status;
-import enums.TaskTypes;
+import main.enums.Status;
+import main.enums.TaskTypes;
 import taskException.ManagerSaveException;
 import tasks.Epic;
 import tasks.SubTask;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class FileBackendTaskManager extends InMemoryTaskManager {
 
-    private File tasksFile;
+    protected final File tasksFile;
     private final HistoryManager historyManager;
 
     public FileBackendTaskManager(File tasksFilePath) {
@@ -70,7 +70,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
             if (sB.length() == 0)
                 sB.append(task.getId());
             else {
-                sB.append("," + task.getId());
+                sB.append(",").append(task.getId());
             }
         }
         return sB.toString();
@@ -102,7 +102,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                 }
 
             } catch (IOException ex) {
-                ex.toString();
+                ex.getMessage();
             }
 
         else if (isThereAreTasksInFile(file)){
@@ -171,7 +171,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public List<Task> history() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
@@ -210,12 +210,12 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
         super.setIndex(index);
     }
 
-    public static List<Long> fromString(String value) {
+    private static List<Long> fromString(String value) {
         String[] array = value.split("\n");
         String lastLine = "";
         if (array.length < 3)
             return null;
-        else if (!array[array.length - 2].isBlank())//using empty line like flag for separate tasks and  history
+        else if (!array[array.length - 2].isBlank())//using empty line like flag for separate main.tasks and  history
             return null;
         else {
             lastLine = array[array.length - 1];
@@ -229,7 +229,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
         return list;
     }
 
-    public static List<Task> fromStringTasks(String value) {
+    private static List<Task> fromStringTasks(String value) {
 
         List<Task> list = new ArrayList<>();
         String[] splitString = value.split("\n");
@@ -304,7 +304,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
         return list;
     }
 
-    public static boolean isThereAreTasksInFile(File file) {
+    private static boolean isThereAreTasksInFile(File file) {
         long i = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             i = br.lines().count();
