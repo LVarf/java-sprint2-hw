@@ -7,6 +7,9 @@ import taskManager.InMemoryTaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 class EpicTest {
 
     private static InMemoryTaskManager inMemoryTaskManager;
@@ -79,5 +82,24 @@ class EpicTest {
         inMemoryTaskManager.addNewSubTask(subTask2);
 
         assertEquals(Status.IN_PROGRESS, epic.getStatus());
+    }
+
+    @Test
+    void getEndTime() {
+        inMemoryTaskManager.addNewEpic(epic);
+        SubTask subTask1 = new SubTask();
+        subTask1.setStartTime(LocalDateTime.now());
+        subTask1.setDuration(Duration.ofMinutes(30));
+        subTask1.setEpicId(epic.getId());
+        inMemoryTaskManager.addNewSubTask(subTask1);
+        SubTask subTask2 = new SubTask();
+        subTask2.setStartTime(subTask1.getStartTime().plusHours(1));
+        subTask2.setDuration(Duration.ofMinutes(30));
+        subTask2.setEpicId(epic.getId());
+        inMemoryTaskManager.addNewSubTask(subTask2);
+
+        assertTrue(subTask2.getEndTime().equals(epic.getEndTime()));
+        assertTrue(subTask1.getStartTime().equals(epic.getStartTime()));
+        assertTrue(subTask1.getDuration().plus(subTask2.getDuration()).equals(epic.getDuration()));
     }
 }

@@ -19,7 +19,7 @@ public interface TaskManager {
 
         public void updateTasks(Task o);//Метод для обновления экземпляра
 
-        public ArrayList<Task> returnAllTasks();//Вывод всех экземпляров
+        public ArrayList<Task> getAllTasks();//Вывод всех экземпляров
 
         public void addNewSubTask(SubTask obj);//Добавление нового подэкземпляр
 

@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import taskManager.TaskManager;
 
-public abstract class TaskManagerTest <T extends TaskManager> {
+public abstract class TaskManagerTest {
 
     @Test
     abstract void getTask();

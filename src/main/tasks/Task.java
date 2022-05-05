@@ -3,6 +3,8 @@ package tasks;
 import main.enums.Status;
 import main.enums.TaskTypes;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -11,11 +13,36 @@ public class Task {
     private Status status; //статус задачи
     private Long id;//id задачи
     protected TaskTypes taskTypes;
+    protected Duration duration;
+    protected LocalDateTime startTime;
+
 
 
     public Task() {
         this.status = Status.NEW;
         this.taskTypes = TaskTypes.TASK;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (duration != null)
+        return startTime.plus(duration);
+        return null;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public TaskTypes getTaskTypes() {

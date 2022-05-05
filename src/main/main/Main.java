@@ -1,5 +1,6 @@
 package main;
 
+import taskManager.FileBackendTaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -7,6 +8,9 @@ import utility.Managers;
 import main.enums.Status;
 import taskManager.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
@@ -39,6 +43,9 @@ public class Main {
                 case 6:
                     writeOnceTask(taskManager);
                     break;
+                case 7:
+                    writeAllTasksWithPriority(taskManager);
+                    break;
                 case 0:
                     System.out.println("Программа успещно завершила работу");
                     System.exit(0);
@@ -70,6 +77,7 @@ public class Main {
         System.out.println("4 - Удалить задачу по номеру");
         System.out.println("5 - Показать историю запросов");
         System.out.println("6 - Вывести задачу по id");
+        System.out.println("7 - Вывести задачи поприоритету");
         System.out.println("0 - Завершить программу");
     }//Контекстное меню
 
@@ -129,6 +137,7 @@ public class Main {
         System.out.println("1 - задачу");
         System.out.println("2 - эпик");
         System.out.println("3 - подзадачу");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
 
         switch ((new Scanner(System.in)).nextInt()){
             case 1:
@@ -137,6 +146,10 @@ public class Main {
                 task.setName((new Scanner(System.in)).nextLine());
                 System.out.println("Введите описание задачи");
                 task.setDescription((new Scanner(System.in)).nextLine());
+                System.out.println("Введите время начала задачи в формате dd.MM.yyyy, HH:mm");
+                task.setStartTime(LocalDateTime.parse((new Scanner(System.in)).nextLine(), formatter));
+                System.out.println("Введите продолжительность задачи (целое число в минутах)");
+                task.setDuration(Duration.ofMinutes((new Scanner(System.in)).nextLong()));
                 taskManager.addNewTask(task);
                 break;
             case 2:
@@ -155,6 +168,10 @@ public class Main {
                 sT.setName((new Scanner(System.in)).nextLine());
                 System.out.println("Введите описание подзадачи");
                 sT.setDescription((new Scanner(System.in)).nextLine());
+                System.out.println("Введите время начала задачи в формате dd.MM.yyyy, HH:mm");
+                sT.setStartTime(LocalDateTime.parse((new Scanner(System.in)).nextLine(), formatter));
+                System.out.println("Введите продолжительность задачи (целое число в минутах)");
+                sT.setDuration(Duration.ofMinutes((new Scanner(System.in)).nextLong()));
                 taskManager.addNewSubTask(sT);
                 break;
             default:
@@ -164,8 +181,15 @@ public class Main {
     }//Создание новой задачи
 
     static void writeAllTasks(TaskManager taskManager){
-        for(Task task: taskManager.returnAllTasks()){
+        for(Task task: taskManager.getAllTasks()){
             System.out.println(task.toString());
         }
     }//Вывод всех задач
+
+    static void writeAllTasksWithPriority(TaskManager taskManager){
+        FileBackendTaskManager fileBackendTaskManager = (FileBackendTaskManager) taskManager;
+        for(Task task: fileBackendTaskManager.getPrioritizedTasks()){
+            System.out.println(task.toString());
+        }
+    }
 }

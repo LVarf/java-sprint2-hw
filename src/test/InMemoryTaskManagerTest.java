@@ -2,6 +2,7 @@ import main.enums.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import taskManager.InMemoryTaskManager;
+import taskManager.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -17,6 +18,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         inMemoryTaskManager = new InMemoryTaskManager();
     }
 
+    @Override
     @Test
     void getTask() {
         Task task = new Task();
@@ -30,6 +32,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         assertNull(inMemoryTaskManager.getTasks(0));
     }
 
+    @Override
     @Test
     void removeTask() {
         Task task = new Task();
@@ -48,24 +51,26 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         assertEquals(0, inMemoryTaskManager.getTasks().size());
     }
 
+    @Override
     @Test
-    void returnAllTasks() {
+     void returnAllTasks() {
         Task task = new Task();
         inMemoryTaskManager.addNewTask(task);
         Task task1 = new Task();
         inMemoryTaskManager.addNewTask(task1);
 
-        assertTrue(inMemoryTaskManager.returnAllTasks().contains(task));
-        assertTrue(inMemoryTaskManager.returnAllTasks().contains(task1));
-        assertEquals(inMemoryTaskManager.returnAllTasks().size(), inMemoryTaskManager.getTasks().size());
+        assertTrue(inMemoryTaskManager.getAllTasks().contains(task));
+        assertTrue(inMemoryTaskManager.getAllTasks().contains(task1));
+        assertEquals(inMemoryTaskManager.getAllTasks().size(), inMemoryTaskManager.getTasks().size());
     }
 
     @Test
     void returnAllTasksWithEmptyList() {
-        assertTrue(inMemoryTaskManager.returnAllTasks().isEmpty());
-        assertEquals(inMemoryTaskManager.returnAllTasks().size(), inMemoryTaskManager.getTasks().size());
+        assertTrue(inMemoryTaskManager.getAllTasks().isEmpty());
+        assertEquals(inMemoryTaskManager.getAllTasks().size(), inMemoryTaskManager.getTasks().size());
     }
 
+    @Override
     @Test
     void getHistory() {
         Task task = new Task();
@@ -83,6 +88,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
                 .size() == 0);
     }
 
+    @Override
     @Test
     void updateTask() {
         Task task = new Task();
@@ -107,6 +113,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
 
 
 
+    @Override
     @Test
     void removeAllTasks() {
         Task task = new Task();
@@ -126,6 +133,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         assertTrue(inMemoryTaskManager.getTasks().isEmpty());
     }
 
+    @Override
     @Test
     void addNewSubTask() {
         Epic epic = new Epic();
@@ -137,6 +145,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         assertTrue(inMemoryTaskManager.getSubTasks().containsValue(subTask));
     }
 
+    @Override
     @Test
     void addNewTask() {
         Task task = new Task();
@@ -145,6 +154,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         assertTrue(inMemoryTaskManager.getTasks().containsValue(task));
     }
 
+    @Override
     @Test
     void addNewEpic() {
         Epic epic = new Epic();
@@ -183,6 +193,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         assertEquals(Status.IN_PROGRESS, epic.getStatus());
     }
 
+    @Override
     @Test
     void setIndex() {
         inMemoryTaskManager.setIndex(7);
