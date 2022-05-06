@@ -13,8 +13,8 @@ public class Task {
     private Status status; //статус задачи
     private Long id;//id задачи
     protected TaskTypes taskTypes;
-    protected Duration duration;
-    protected LocalDateTime startTime;
+    protected Long duration;
+    private LocalDateTime startTime;
 
 
 
@@ -25,11 +25,11 @@ public class Task {
 
     public LocalDateTime getEndTime() {
         if (duration != null)
-        return startTime.plus(duration);
+        return startTime.plusMinutes(duration);
         return null;
     }
 
-    public Duration getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
@@ -37,7 +37,7 @@ public class Task {
         return startTime;
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 

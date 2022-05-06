@@ -6,6 +6,7 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -14,6 +15,8 @@ public interface TaskManager {
         public void removeTask(Long i);//Удаляет экземпляр по идентификатору
 
         public void removeAllTasks();//Удаление всех экземпляров
+
+        public Set<Task> getPrioritizedTasks();
 
         public List<Task> getHistory();
 

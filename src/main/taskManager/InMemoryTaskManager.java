@@ -76,7 +76,11 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (!(subTasks.isEmpty()) && subTasks.containsKey(i)){
             if(memory.getNodeMap().containsKey(i))
                 inMemoryHistoryManager.remove(i);
+            SubTask subTask = (SubTask) subTasks.get(i);
+            Epic epic = (Epic) epics.get(subTask.getEpicId());
             subTasks.remove(i);
+            updateEpicStatus(epic);
+            getTimeEpic(epic);
         }
     }//Удаляет задачу по идентификатору
 
@@ -95,6 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
         return ls;
     }//Вывод всех задач
 
+    @Override
     public Set<Task> getPrioritizedTasks(){//Вывод всех задач
         return prioritisedSet;
     }
@@ -158,8 +163,10 @@ public class InMemoryTaskManager implements TaskManager {
                 subTasks.remove(id);
                 subTasks.put(id, sT);
                 prioritisedSet.add(o);
+                Epic epic = (Epic) epics.get(sT.getEpicId());
+                updateEpicStatus(epic);
+                getTimeEpic(epic);
             }
-            updateEpicStatus((Epic) epics.get(sT.getEpicId()));
         }
     }//Метод для обновления задачи
 
@@ -203,12 +210,12 @@ public class InMemoryTaskManager implements TaskManager {
         return isNoHaveMistake;
     }
 
-    public void getTimeEpic(Epic epic) {//find an epic's fields
+    private void getTimeEpic(Epic epic) {//find an epic's fields
 
 
-        LocalDateTime startTime = null /*subTasks.get(epic.getListSubTask().get(0)).getStartTime()*/;
-        LocalDateTime endTime = null /*subTasks.get(epic.getListSubTask().get(0)).getEndTime()*/;
-        Duration duration = Duration.ofSeconds(0);
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
+        Long duration = 0L;
         try {
             for (Long st : epic.getListSubTask()) {
                 if (startTime == null)
@@ -220,11 +227,11 @@ public class InMemoryTaskManager implements TaskManager {
                     endTime = subTasks.get(st).getEndTime();
                 else if (subTasks.get(st).getEndTime().isAfter(endTime))
                     endTime = subTasks.get(st).getEndTime();
-                duration = duration.plus(subTasks.get(st).getDuration());
+                duration += subTasks.get(st).getDuration();
 
             }
         } catch (NullPointerException exception) {
-
+            System.out.println(exception.getMessage());
         }
 
         epic.setStartTime(startTime);
@@ -282,21 +289,23 @@ public class InMemoryTaskManager implements TaskManager {
     public void addNewSubTask(SubTask sT){//Добавление новой подзадачи
         Epic e = (Epic) epics.get(sT.getEpicId());//вернуть epic по id из subTask
         sT.setId(generateId());//присвоить subTask свой id
-        getTimeEpic(e);
-        if (checkingTimeConflict(sT) && checkingTimeConflict(e)) {
+        if (checkingTimeConflict(sT)) {
             subTasks.put(index, sT);//записать subTask в свою таблицу
             e.getListSubTask().add(sT.getId());//добавить id subTask в поле-список эпика
-            updateEpicStatus(e);//обновить поле-статус эпика
-            prioritisedSet.add(sT);
-            prioritisedSet.remove(e);
-            prioritisedSet.add(e);
+            getTimeEpic(e);
+            if (checkingTimeConflict(e)) {
+                updateEpicStatus(e);//обновить поле-статус эпика
+                prioritisedSet.add(sT);
+                prioritisedSet.remove(e);
+                prioritisedSet.add(e);
+            }
         }
     }//Добавление новой подзадачи
 
     @Override
     public void addNewTask(Task o){//Добавление новой задачи
-        o.setId(generateId());
         if (checkingTimeConflict(o)) {
+            o.setId(generateId());
             tasks.put(index, o);
             prioritisedSet.add(o);
         }
@@ -304,8 +313,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addNewEpic(Epic o){//Добавление нового эпика
-        o.setId(generateId());
         if (checkingTimeConflict(o)) {
+            o.setId(generateId());
             epics.put(index, o);
             prioritisedSet.add(o);
         }

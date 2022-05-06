@@ -3,10 +3,12 @@ package tasks;
 
 import main.enums.TaskTypes;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SubTask extends Task {
     private Long epicId;//id эпика, к которому относится объект
+    private LocalDateTime startTime;
 
     public SubTask() {
         super();

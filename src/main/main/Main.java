@@ -149,7 +149,7 @@ public class Main {
                 System.out.println("Введите время начала задачи в формате dd.MM.yyyy, HH:mm");
                 task.setStartTime(LocalDateTime.parse((new Scanner(System.in)).nextLine(), formatter));
                 System.out.println("Введите продолжительность задачи (целое число в минутах)");
-                task.setDuration(Duration.ofMinutes((new Scanner(System.in)).nextLong()));
+                task.setDuration((new Scanner(System.in)).nextLong());
                 taskManager.addNewTask(task);
                 break;
             case 2:
@@ -171,7 +171,7 @@ public class Main {
                 System.out.println("Введите время начала задачи в формате dd.MM.yyyy, HH:mm");
                 sT.setStartTime(LocalDateTime.parse((new Scanner(System.in)).nextLine(), formatter));
                 System.out.println("Введите продолжительность задачи (целое число в минутах)");
-                sT.setDuration(Duration.ofMinutes((new Scanner(System.in)).nextLong()));
+                sT.setDuration((new Scanner(System.in)).nextLong());
                 taskManager.addNewSubTask(sT);
                 break;
             default:

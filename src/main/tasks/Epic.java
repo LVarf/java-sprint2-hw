@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Long> listSubTask;
+    private LocalDateTime startTime;
     private LocalDateTime endTime;
 
     public Epic() {

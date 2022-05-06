@@ -262,7 +262,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                     task.setStatus(Status.valueOf(split[3]));
                     task.setDescription(split[4]);
                     task.setStartTime((split[5].equals("null")) ? null : LocalDateTime.parse(split[5]));
-                    task.setDuration((split[6].equals("null")) ? null : Duration.parse(split[6]));
+                    task.setDuration((split[6].equals("null")) ? null : Long.parseLong(split[6]));
                     list.add(task);
                 } else if (TaskTypes.EPIC.equals(TaskTypes.valueOf(split[1]))) {
                     Epic epic = new Epic();
@@ -272,7 +272,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                     epic.setStatus(Status.valueOf(split[3]));
                     epic.setDescription(split[4]);
                     epic.setStartTime((split[5].equals("null")) ? null : LocalDateTime.parse(split[5]));
-                    epic.setDuration((split[6].equals("null")) ? null : Duration.parse(split[6]));
+                    epic.setDuration((split[6].equals("null")) ? null : Long.parseLong(split[6]));
                     epic.setEndTime((split[7].equals("null")) ? null : LocalDateTime.parse(split[7]));
                     list.add(epic);
                 } else if (TaskTypes.SUBTASK.equals(TaskTypes.valueOf(split[1]))) {
@@ -283,7 +283,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                     subTask.setStatus(Status.valueOf(split[3]));
                     subTask.setDescription(split[4]);
                     subTask.setStartTime((split[5].equals("null")) ? null : LocalDateTime.parse(split[5]));
-                    subTask.setDuration((split[6].equals("null")) ? null : Duration.parse(split[6]));
+                    subTask.setDuration((split[6].equals("null")) ? null : Long.parseLong(split[6]));
                     try {
                         subTask.setEpicId(Long.parseLong(split[8]));
                     } catch (IndexOutOfBoundsException e) {
@@ -303,7 +303,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                     task.setStatus(Status.valueOf(split[3]));
                     task.setDescription(split[4]);
                     task.setStartTime((split[5].equals("null")) ? null : LocalDateTime.parse(split[5]));
-                    task.setDuration((split[6].equals("null")) ? null : Duration.parse(split[6]));
+                    task.setDuration((split[6].equals("null")) ? null : Long.parseLong(split[6]));
                     list.add(task);
                 } else if (TaskTypes.EPIC.equals(TaskTypes.valueOf(split[1]))) {
                     Epic epic = new Epic();
@@ -313,7 +313,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                     epic.setStatus(Status.valueOf(split[3]));
                     epic.setDescription(split[4]);
                     epic.setStartTime((split[5].equals("null")) ? null : LocalDateTime.parse(split[5]));
-                    epic.setDuration((split[6].equals("null")) ? null : Duration.parse(split[6]));
+                    epic.setDuration((split[6].equals("null")) ? null : Long.parseLong(split[6]));
                     epic.setEndTime((split[7].equals("null")) ? null : LocalDateTime.parse(split[7]));
                     list.add(epic);
                 } else if (TaskTypes.SUBTASK.equals(TaskTypes.valueOf(split[1]))) {
@@ -324,7 +324,7 @@ public class FileBackendTaskManager extends InMemoryTaskManager {
                     subTask.setStatus(Status.valueOf(split[3]));
                     subTask.setDescription(split[4]);
                     subTask.setStartTime((split[5].equals("null")) ? null : LocalDateTime.parse(split[5]));
-                    subTask.setDuration((split[6].equals("null")) ? null : Duration.parse(split[6]));
+                    subTask.setDuration((split[6].equals("null")) ? null : Long.parseLong(split[6]));
                     try {
                         subTask.setEpicId(Long.parseLong(split[8]));
                     } catch (IndexOutOfBoundsException e) {
