@@ -1,6 +1,8 @@
 package server;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -27,25 +29,23 @@ import main.enums.TaskTypes;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
+
     private static Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
+            .registerTypeAdapter(LocalDateTime.class, new TypeAdapter <LocalDateTime>(){
+                private final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd.MM.yyyy, hh:mm");
+                private final DateTimeFormatter formatterReader = DateTimeFormatter.ofPattern("dd.MM.yyyy, hh:mm");
+
                 @Override
-                public JsonElement serialize(
-                        LocalDateTime localDateTime, Type type, JsonSerializationContext jsonSerializationContext
-                ) {
-                    return new JsonPrimitive(localDateTime.toString());
+                public void write(final JsonWriter jsonWriter, final LocalDateTime localDate) throws IOException {
+                    jsonWriter.value(localDate.format(formatterWriter));
+                }
+
+                @Override
+                public LocalDateTime read(final JsonReader jsonReader) throws IOException {
+                    return LocalDateTime.parse(jsonReader.nextString(), formatterReader);
                 }
             })
-            .registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-        @Override
-        public LocalDateTime deserialize(
-                JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext
-        ) throws JsonParseException {
-            Instant instant = Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong());
-            return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-        }
-    })
-        .create();;
+            .create();;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public static void main(String[] args) {
@@ -54,7 +54,7 @@ public class HttpTaskServer {
             httpServer.bind(new InetSocketAddress(PORT), 0);
             httpServer.createContext("/tasks", new TaskHandler());
             httpServer.start();
-            new KVServer().start();
+            new KVTaskServer().start();
 
         } catch (IOException ex) {
             System.out.println("Start server ERROR...");
@@ -68,11 +68,9 @@ public class HttpTaskServer {
             String response;
             TaskManager taskManager = Managers.getFileBackendTaskManager();
 
-
-            String method = httpExchange.getRequestMethod();
             Long id;
             String path = httpExchange.getRequestURI().getPath();
-            switch (method) {
+            switch (httpExchange.getRequestMethod()) {
                 case "GET":
                     if (path.split("/").length < 3) {
                         response = gson.toJson(taskManager.getAllTasks().toString());
@@ -107,6 +105,7 @@ public class HttpTaskServer {
                 case "POST":
                     InputStream inputStream = httpExchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
+
                     JsonElement jsonElement = JsonParser.parseString(body);
                     JsonObject jsonObject = jsonElement.getAsJsonObject();
                     String taskType = jsonObject.get("taskType").getAsString();

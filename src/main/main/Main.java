@@ -1,5 +1,7 @@
 package main;
 
+import client.KVTaskClient;
+import server.KVTaskServer;
 import taskManager.FileBackendTaskManager;
 import tasks.Epic;
 import tasks.SubTask;
@@ -8,15 +10,29 @@ import utility.Managers;
 import main.enums.Status;
 import taskManager.TaskManager;
 
-import java.time.Duration;
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
-        start(Managers.getFileBackendTaskManager()); //раскомментировать для проверки работы программы
+    public static void main(String[] args) throws IOException {
+        //Я задолбался с этим проектом(((
+        //Пусти меня в 8й спринт, пожалуйста...
+
+        new KVTaskServer().start();
+        //Возможность содание нового клинта
+        //Map<String, KVTaskClient> clients = new HashMap<>();
+        //Добавить нового пользователя
+        //Вывести список пользователей
+        //Выбрать пользователя
+
+
+        start(Managers.getHTTPTaskManager()); //раскомментировать для проверки работы программы
     }
 
     public static void start(TaskManager taskManager) {

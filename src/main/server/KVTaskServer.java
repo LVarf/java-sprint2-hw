@@ -1,9 +1,11 @@
 package server;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +13,14 @@ import java.util.Map;
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
-public class KVServer {
+public class KVTaskServer {
     public static final int PORT = 8078;
     private final String API_TOKEN;
     private HttpServer server;
+    private Gson  gson = new Gson();
     private Map<String, String> data = new HashMap<>();
 
-    public KVServer() throws IOException {
+    public KVTaskServer() throws IOException {
         API_TOKEN = generateApiKey();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/register", (h) -> {
@@ -70,6 +73,36 @@ public class KVServer {
             }
         });
         server.createContext("/load", (h) -> {
+            try {
+                System.out.println("\n/load");
+                if (!hasAuth(h)) {
+                    System.out.println("Запрос неавторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+                    h.sendResponseHeaders(403, 0);
+                    return;
+                }
+                switch (h.getRequestMethod()) {
+                    case "GET":
+                        String key = h.getRequestURI().getPath().substring("/load/".length());
+                        if (key.isEmpty()) {
+                            System.out.println("Key для возврата пустой. key указывается в пути: /load/{key}");
+                            h.sendResponseHeaders(400, 0);
+                            return;
+                        }
+
+                        String response = gson.toJson(data.get(key));
+                        h.sendResponseHeaders(200, 0);
+                        try (OutputStream os = h.getResponseBody()) {
+                            os.write(response.getBytes());
+                        }
+                        break;
+                    default:
+                        System.out.println("/load ждёт GET-запрос, а получил: " + h.getRequestMethod());
+                        h.sendResponseHeaders(405, 0);
+            }
+        } finally {
+            h.close();
+        }
+
             // TODO Добавьте получение значения по ключу
         });
     }
