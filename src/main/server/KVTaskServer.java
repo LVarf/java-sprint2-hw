@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -17,7 +18,9 @@ public class KVTaskServer {
     public static final int PORT = 8078;
     private final String API_TOKEN;
     private HttpServer server;
-    private Gson  gson = new Gson();
+    private Gson  gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
     private Map<String, String> data = new HashMap<>();
 
     public KVTaskServer() throws IOException {
@@ -72,6 +75,23 @@ public class KVTaskServer {
                 h.close();
             }
         });
+
+        server.createContext("/close", (h) -> {
+            try {
+                switch (h.getRequestMethod()) {
+                    case "GET":
+                        stop();
+                        h.sendResponseHeaders(200, 0);
+                        break;
+                    default:
+                        System.out.println("Неверная команда");
+                        h.sendResponseHeaders(400, 0);
+                }
+        } finally {
+                h.close();
+            }
+        });
+
         server.createContext("/load", (h) -> {
             try {
                 System.out.println("\n/load");
@@ -112,6 +132,11 @@ public class KVTaskServer {
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         System.out.println("API_TOKEN: " + API_TOKEN);
         server.start();
+    }
+
+    public void  stop() {
+        System.out.println("Закрываем сервер на порту + " + PORT);
+        server.stop(0);
     }
 
     private String generateApiKey() {

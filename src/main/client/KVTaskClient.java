@@ -6,9 +6,7 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.ByteBuffer;
 import java.util.Scanner;
-import java.util.concurrent.Flow;
 
 public class KVTaskClient {
     private URL url;
@@ -18,8 +16,8 @@ public class KVTaskClient {
 
     public KVTaskClient(URL url) {
         this.url = url;
-        System.out.println("Inter your key.");
-        key = (new Scanner(System.in)).next();
+        //System.out.println("Inter your key.");
+       // key = (new Scanner(System.in)).next();
         try {
             URI newUrl = URI.create(url.toString() + "/register/"+ key);
 
@@ -46,7 +44,7 @@ public class KVTaskClient {
     }
 
     public void put(String key, String json) throws IOException, InterruptedException {
-        URI newUrl = URI.create(url.toString() + "/save/" + key);
+        URI newUrl = URI.create(url.toString() + "/save/" + key + "?" + API_TOKEN);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -62,7 +60,7 @@ public class KVTaskClient {
     }
 
     public String load(String key) throws IOException, InterruptedException {
-        URI newUrl = URI.create(url.toString() + "/load/" + key);
+        URI newUrl = URI.create(url.toString() + "/load/" + key + "?" + API_TOKEN);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()

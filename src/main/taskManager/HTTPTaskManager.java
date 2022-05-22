@@ -7,14 +7,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import tasks.Task;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public class HTTPTaskManager extends FileBackendTaskManager {
     private final KVTaskClient client;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    private Gson gson = new GsonBuilder()
+    private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new TypeAdapter <LocalDateTime>(){
                 private final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
                 private final DateTimeFormatter formatterReader = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
@@ -72,10 +69,21 @@ public class HTTPTaskManager extends FileBackendTaskManager {
         }
     }
 
+    public KVTaskClient getClient() {
+        return client;
+    }
+
     public static HTTPTaskManager loadFromFile(URL url) {
 
         HTTPTaskManager taskManager = new HTTPTaskManager(url);
 
+        try {
+
+            taskManager.client.load(taskManager.client.getKey());
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return taskManager;
     }
